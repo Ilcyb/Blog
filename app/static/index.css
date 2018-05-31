@@ -1,0 +1,36 @@
+.blog-post{
+    margin-top: 10%;
+}
+
+.post-title{
+    width: auto;
+    cursor: pointer;
+}
+
+.post-info{
+    font-size: 20px;
+    font-weight: 500;
+    color: #999;
+}
+
+.post-desc{
+    margin-top: 16px;
+}
+
+.post-desc p{
+    color: #333;
+    font-size: 18px;
+}
+
+.post-more{
+    margin-bottom: 10px;
+}
+
+.post-more a{
+    font-size: 18px;
+}
+
+.blog-post hr{
+    font-size: 18px;
+    line-height: 1.5;
+}

@@ -1,0 +1,18 @@
+body{
+    width: 74%;
+    margin-left: 13%;
+}
+
+.avator{
+    width: 13%;
+    float: left;
+}
+
+.avator-title{
+    display: float;
+    font-size: 36px;
+}
+
+.navbar{
+    font-size: 26px;
+}

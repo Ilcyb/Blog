@@ -1,19 +1,20 @@
 from os import environ
 
 class Config:
-    mysql_username = environ.get('mysql_username')
-    mysql_password = environ.get('mysql_password')
-    mysql_host = '127.0.0.1'
-    mysql_charset = 'utf8'
+    MYSQL_USERNAME = environ.get('local_mysql_username')
+    MYSQL_PASSWORD = environ.get('mysql_password')
+    MYSQL_HOST = '127.0.0.1'
+    MYSQL_CHARSET = 'utf8'
+    ARTICLE_PER_PAGE = 6
 
 class DevConfig(Config):
-    mysql_db = 'blog_dev'
+    MYSQL_DB = 'blog'
 
 class TestConfig(Config):
-    mysql_db = 'blog_test'
+    MYSQL_DB = 'blog_test'
 
 class ProdConfig(Config):
-    mysql_db = 'blog'
+    MYSQL_DB = 'blog'
 
 
 configs = {
