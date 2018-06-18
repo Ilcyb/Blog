@@ -7,10 +7,10 @@ def assembleQuerySqlString(tableName, keywords, conjunction, *args):
     sql3 = ''
     for key, value in keywords.items():
         if flag == 1:
-            sql3 += (key + '=\'' + value + '\' ')
+            sql3 += (' {}={} '.format(key, str(value)))
             flag += 1
         else:
-            sql3 += (conjunction + ' ' + key + '=\'' + value + '\' ')
+            sql3 += ('{} {}={} '.format(conjunction or '', key, str(value)))
     return sql1 + sql2 + sql3
 
 def assembleInsertSqlString(tableName, keywords, values):
@@ -23,13 +23,13 @@ def assembleUpdateSqlString(tableName, newValues, conditions, conjunction):
     sql3 = ' where '
     tempList = list()
     for key, value in newValues.items():
-        tempList.append(key + "='" + value + "'")
+        tempList.append("{}={}".format(key, str(value)))
     sql2 = ','.join(tempList)
 
     tempList = list()
     for key, value in conditions.items():
-        tempList.append(key + "='" + value + "'")
-    sql3 += (conjunction + ' ').join(tempList)
+        tempList.append("{}={}".format(key, str(value)))
+    sql3 += (conjunction or '' + ' ').join(tempList)
 
     return sql1 + sql2 + sql3
     
@@ -39,11 +39,21 @@ def assembleDeleteSqlString(tableName, condition, conjunction):
 
     tempList = list()
     for key, value in condition.items():
-        tempList.append(key + "='" + value + "'")
-    sql2 = (conjunction + ' ').join(tempList)
+        tempList.append(str(key) + "='" + str(value) + "'")
+    sql2 = (conjunction or '' + ' ').join(tempList)
 
     return sql1+ sql2
 
+def getShortDescFromContent(content, threshold=100):
+    if len(content) < threshold:
+        return content
+    # count = 0
+    # for i in range(threshold):
+    #     if content[count].isspace():
+    #         break
+    #     count += 1
+    # return content[:count]
+    return content[:threshold] + "..."
 
 class FetchType(Enum):
     FetchOne = 0

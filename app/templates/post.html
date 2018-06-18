@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='post.css')}}"> 
+{% endblock %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="post">
+                <h1 class="post-title">{{post.title}}</h1>
+            </div>
+            <div class="post-info">
+                <span>发布时间：{{ post.time }}</span>&nbsp;&nbsp;&nbsp;
+                <span>标签：{{ post.tag }}</span>&nbsp;&nbsp;&nbsp;
+                <span>点击量：{{ post.views }}</span>&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="post-content">
+                {{ post.content|markdown }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -15,6 +15,7 @@ class DBHelper(object):
             self.conn.begin()
             cursor = self.conn.cursor()
             cursor.execute(sql)
+            self.conn.commit()
             return cursor.fetchall()
         except Exception as e:
             self.conn.rollback()
@@ -43,7 +44,9 @@ class DBHelper(object):
         try:
             self.conn.begin()
             cursor = self.conn.cursor()
-            return cursor.execute(assembleInsertSqlString(tableName, keywords, values))
+            flag = cursor.execute(assembleInsertSqlString(tableName, keywords, values))
+            self.conn.commit()
+            return flag
         except Exception as e:
             self.conn.rollback()
             raise e
@@ -54,7 +57,9 @@ class DBHelper(object):
         try:
             self.conn.begin()
             cursor = self.conn.cursor()
-            return cursor.execute(assembleUpdateSqlString(tableName, newValues, conditions, conjunction))
+            flag = cursor.execute(assembleUpdateSqlString(tableName, newValues, conditions, conjunction))
+            self.conn.commit()
+            return flag
         except Exception as e:
             self.conn.rollback()
             raise e
@@ -65,7 +70,9 @@ class DBHelper(object):
         try:
             self.conn.begin()
             cursor = self.conn.cursor()
-            return cursor.execute(assembleDeleteSqlString(tableName, condition, conjunction))
+            flag = cursor.execute(assembleDeleteSqlString(tableName, condition, conjunction))
+            self.conn.commit()
+            return flag
         except Exception as e:
             self.conn.rollback()
             raise e
