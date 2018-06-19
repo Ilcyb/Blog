@@ -6,6 +6,7 @@ class Config:
     MYSQL_HOST = '127.0.0.1'
     MYSQL_CHARSET = 'utf8'
     ARTICLE_PER_PAGE = 6
+    HOTEST_ARTICLE_NUMS = 5
 
 class DevConfig(Config):
     MYSQL_DB = 'blog'

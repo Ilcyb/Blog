@@ -1,7 +1,7 @@
 from . import blog
 from ..utils.DBHelper import DBHelper
 from ..utils.Utils import FetchType, getShortDescFromContent
-from flask import render_template, redirect, url_for, abort
+from flask import render_template, redirect, url_for, abort, current_app
 
 
 @blog.route('/')
@@ -24,8 +24,10 @@ def detailPost(postId):
         abort(404)
     else:
         article = result[0]
-        post = dict(id=postId, title=article[0], time=article[2].strftime('%Y-%m-%d'), views=article[3], tag=article[4], content=article[1])
         h.executeUpdate('article', dict(views=article[3]+1), dict(article_id=postId), None)
-        # h.execute("update article set views={} where article_id={}".format(str(article[3]+1), str(postId)))
-        print(article[3]+1)
-        return render_template('post.html', post=post)
+        post = dict(id=postId, title=article[0], time=article[2].strftime('%Y-%m-%d'), views=article[3]+1, tag=article[4], content=article[1])
+
+        sql = 'select article_id,title from article order by views desc limit ' + str(current_app.config['HOTEST_ARTICLE_NUMS'])
+        hotest_articles = h.execute(sql)
+        hotest_posts = [dict(id=article_tuple[0], title=article_tuple[1]) for article_tuple in hotest_articles]
+        return render_template('post.html', post=post, hotest_posts=hotest_posts)

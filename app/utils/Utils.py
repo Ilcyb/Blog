@@ -44,7 +44,7 @@ def assembleDeleteSqlString(tableName, condition, conjunction):
 
     return sql1+ sql2
 
-def getShortDescFromContent(content, threshold=100):
+def getShortDescFromContent(content, threshold=200):
     if len(content) < threshold:
         return content
     # count = 0

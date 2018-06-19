@@ -21,6 +21,16 @@
                 {{ post.content|markdown }}
             </div>
         </div>
+        <div class="col-sm-4">
+            <div class="post-side">
+                <div class="hotest-post">
+                    <h3>最热文章</h3>
+                    {% for post in hotest_posts %}
+                    <a href="{{url_for('blog.detailPost', postId=post.id)}}">{{ post.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
