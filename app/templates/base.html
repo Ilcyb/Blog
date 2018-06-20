@@ -13,6 +13,7 @@
 </head>
 
 <body>
+    <div class="wrap">
     <div class="row">
         <ul class="nav nav-pills col-md-8">
             <li class="navbar presentation"><a href="#">ilcyb</a></li></li>
@@ -27,6 +28,15 @@
         <em class="avator-title col-md-offset-1 col-xs-offset-1"><a href="#">ilcyb's Blog</a></em>
     </div>
     {% block body %}{% endblock %}
+    <div class="push"></div>
+    </div>
+    <footer class="footer">
+        <hr>
+            <div class="footer-company">
+                @ilcyb 2018-{{ now.year }} Support By {{ power }}
+            </div>
+    </footer>
 </body>
+
 
 </html>

@@ -7,6 +7,7 @@ class Config:
     MYSQL_CHARSET = 'utf8'
     ARTICLE_PER_PAGE = 6
     HOTEST_ARTICLE_NUMS = 5
+    POWERD = 'Tencent Cloud'
 
 class DevConfig(Config):
     MYSQL_DB = 'blog'

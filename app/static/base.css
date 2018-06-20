@@ -1,18 +1,45 @@
-body{
+html{
+    height: 100%;
+    margin: 0;
+}
+
+body {
     width: 74%;
+    height: 100%;
     margin-left: 13%;
 }
 
-.avator{
+.wrap {
+    min-height: 100%;
+    margin-bottom: -100px;
+}
+
+.avator {
     width: 13%;
     float: left;
 }
 
-.avator-title{
+.avator-title {
     display: float;
     font-size: 36px;
 }
 
-.navbar{
+.navbar {
     font-size: 26px;
+}
+
+.footer,
+.push {
+    height: 100px;
+}
+
+.footer hr{
+    border-bottom: 1px solid #999;
+}
+
+.footer-company{
+    font-size: 16px;
+    text-align: center;
+    margin-top: 30px;
+    color: #999;
 }
