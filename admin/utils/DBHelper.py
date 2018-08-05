@@ -10,11 +10,11 @@ class DBHelper(object):
     def __del__(self):
         self.conn.close()
 
-    def execute(self, sql):
+    def execute(self, sql, params=None):
         try:
             self.conn.begin()
             cursor = self.conn.cursor()
-            cursor.execute(sql)
+            cursor.execute(sql, params)
             self.conn.commit()
             return cursor.fetchall()
         except Exception as e:
@@ -46,7 +46,20 @@ class DBHelper(object):
             cursor = self.conn.cursor()
             flag = cursor.execute(assembleInsertSqlString(tableName, keywords, values))
             self.conn.commit()
-            return flag
+            return cursor.lastrowid
+        except Exception as e:
+            self.conn.rollback()
+            raise e
+        finally:
+            cursor.close()
+
+    def executeRawInsert(self, sql, params=None):
+        try:
+            self.conn.begin()
+            cursor = self.conn.cursor()
+            cursor.execute(sql, params)
+            self.conn.commit()
+            return cursor.lastrowid
         except Exception as e:
             self.conn.rollback()
             raise e

@@ -1,13 +1,14 @@
 from os import environ
 
 class Config:
-    MYSQL_USERNAME = environ.get('local_mysql_username')
-    MYSQL_PASSWORD = environ.get('mysql_password')
+    MYSQL_USERNAME = environ.get('MYSQL_USERNAME')
+    MYSQL_PASSWORD = environ.get('MYSQL_PASSWORD')
     MYSQL_HOST = '127.0.0.1'
     MYSQL_CHARSET = 'utf8'
     ARTICLE_PER_PAGE = 6
     HOTEST_ARTICLE_NUMS = 5
     POWERD = 'Tencent Cloud'
+    SECRET_KEY = 'H^8dh2{^,?'
 
 class DevConfig(Config):
     MYSQL_DB = 'blog'

@@ -13,7 +13,7 @@ create table if not exists `Article`(
     `title` varchar(30) not null,
     `content` text not null,
     `time` datetime not null default now(),
-    `views` int not null,
+    `views` int not null default 0,
     `category` int not null,
     primary key (`article_id`)
 )engine=InnoDB default charset=utf8;
@@ -38,4 +38,11 @@ create table if not exists `tag_article`(
     `tag_id` int,
     `article_id` int,
     primary key (`tag_id`, `article_id`)
+)engine=InnoDB default charset=utf8;
+
+create table if not exists `admin`(
+    `admin_id` int auto_increment,
+    `username` varchar(20),
+    `password` varchar(128),
+    primary key (`admin_id`)
 )engine=InnoDB default charset=utf8;

@@ -13,34 +13,6 @@
 </head>
 
 <body>
-    <!-- <div class="post-list">
-        <ul>
-            <li>
-                <div class="row">
-                    <a href="#" class="col-md-5"><p>啦啦啦啦啦啦啦啦啦啦啦啦</p></a>
-                    <button type="button" class="btn btn-primary">修改</button>
-                    <button type="button" class="btn btn-danger">删除</button>
-                </div>
-            </li>
-
-            <li>
-                    <div class="row">
-                        <a href="#" class="col-md-5"><p>啦啦啦啦啦啦啦啦啦啦啦啦</p></a>
-                        <button type="button" class="btn btn-primary">修改</button>
-                        <button type="button" class="btn btn-danger">删除</button>
-                    </div>
-                </li>
-
-                <li>
-                        <div class="row">
-                            <a href="#" class="col-md-5"><p>啦啦啦啦啦啦啦啦啦啦啦啦</p></a>
-                            <button type="button" class="btn btn-primary">修改</button>
-                            <button type="button" class="btn btn-danger">删除</button>
-                        </div>
-                    </li>
-        </ul>
-    </div> -->
-
     <body>
             <nav class="navbar navbar-inverse" role="navigation">
                 <div class="container-fluid">
@@ -50,9 +22,9 @@
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a>欢迎您,admin</a>
+                            <li><a>欢迎您, {{ username }}</a>
                             </li>
-                            <li><a href="#">安全退出</a>
+                            <li><a href="/logout">安全退出</a>
                             </li>
                         </ul>
                     </div>
@@ -62,7 +34,8 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-2">
-                        <a href="#" class="list-group-item active">文章管理</a>
+                        <a href="/" class="list-group-item active">文章管理</a>
+                        <a href="/post" class="list-group-item">新建文章</a>
                     </div>
                     <div class="col-sm-10">
                         <ol class="breadcrumb">
