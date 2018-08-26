@@ -11,8 +11,8 @@ mysql5.7:
   ports:
     - "3306:3306"
 
-python3.5-uwsgi-app:
-  container_name: "python3.5-uwsgi"
+blog-app:
+  container_name: "python3.5-uwsgi-blog-app"
   hostname: "blog-app"
   image: "python3.5-uwsgi"
   volumes:
@@ -25,8 +25,8 @@ python3.5-uwsgi-app:
     - "5000:5000"
   command: "uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
 
-python3.5-uwsgi-admin:
-  container_name: "python3.5-uwsgi"
+blog-admin:
+  container_name: "python3.5-uwsgi-blog-admin"
   hostname: "blog-admin"
   image: "python3.5-uwsgi"
   volumes:
