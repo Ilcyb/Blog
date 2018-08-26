@@ -18,4 +18,3 @@ def inject_power():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    admin_app.run(debug=True)
