@@ -2,7 +2,13 @@ FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
 
 COPY requirements.txt /home/requirements.txt
 
-RUN pip3 install -r /home/requirements.txt
+RUN python3 -m ensurepip && \
+    rm -r /usr/lib/python*/ensurepip && \
+    pip3 install --upgrade pip setuptools && \
+    pip3 install -r /home/requirements.txt && \
+    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
+    if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
+    rm -r /root/.cache
 
 EXPOSE 5000
 EXPOSE 5001
