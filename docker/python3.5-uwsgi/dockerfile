@@ -2,7 +2,7 @@ FROM alpine:3.8
 
 COPY requirements.txt /home/requirements.txt
 
-RUN apk add --no-cache python3 build-base linux-headers pcre-dev && \
+RUN apk add --no-cache python3 uwsgi-python3 && \
     python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
     pip3 install --upgrade pip setuptools && \
