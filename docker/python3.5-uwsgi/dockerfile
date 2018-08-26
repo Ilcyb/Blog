@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     pip3 install -r /home/requirements.txt && \
     wget https://projects.unbit.it/downloads/uwsgi-2.0.17.1.tar.gz && \
     mkdir -p /var/uwsgi && \
-    tar zxvf uwsgi-latest.tar.gz -C /var/uwsgi && \
+    tar zxvf uwsgi-2.0.17.1.tar.gz -C /var/uwsgi && \
     cd /var/uwsgi/uwsgi-2.0.17.1 && \
     make
 
