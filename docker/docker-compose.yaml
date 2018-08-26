@@ -1,0 +1,56 @@
+mysql5.7:
+  container_name: "mysql5.7"
+  hostname: "mysql"
+  image: "mysql:5.7"
+  volumes:
+    - /home/hyb/Blog/docker/mysql/config:/etc/my.conf
+    - /home/hyb/Blog/docker/mysql/data:/var/lib/mysql
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - TZ=Asia/Shanghai
+  ports:
+    - "3306:3306"
+
+python3.5-uwsgi-app:
+  container_name: "python3.5-uwsgi"
+  hostname: "blog-app"
+  image: "python3.5-uwsgi"
+  volumes:
+    - /home/hyb/Blog:/home/Blog
+  environment:
+    - MYSQL_USERNAME=root
+    - MYSQL_PASSWORD=root
+    - TZ=Asia/Shanghai
+  ports:
+    - "5000:5000"
+  command: "uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
+
+python3.5-uwsgi-admin:
+  container_name: "python3.5-uwsgi"
+  hostname: "blog-admin"
+  image: "python3.5-uwsgi"
+  volumes:
+    - /home/hyb/Blog:/home/Blog
+  environment:
+    - MYSQL_USERNAME=root
+    - MYSQL_PASSWORD=root
+    - TZ=Asia/Shanghai
+  ports:
+    - "5001:5001"
+  command: "uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-admin.ini"
+
+nginx:
+  container_name: "nginx"
+  hostname: "nginx"
+  image: "nginx"
+  volumes:
+    - /home/hyb/Blog/docker/nginx/conf.d:/etc/nginx/conf.d
+  environment:
+    - TZ=Asia/Shanghai
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - blog-app:blog-app
+    - blog-admin:blog-admin
+  
