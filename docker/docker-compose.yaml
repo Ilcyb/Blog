@@ -42,7 +42,7 @@ python3.5-uwsgi-admin:
 nginx:
   container_name: "nginx"
   hostname: "nginx"
-  image: "nginx"
+  image: "nginx:1.15.2-alpine"
   volumes:
     - /home/hyb/Blog/docker/nginx/conf.d:/etc/nginx/conf.d
   environment:
