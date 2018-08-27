@@ -3,7 +3,7 @@ from os import environ
 class Config:
     MYSQL_USERNAME = environ.get('MYSQL_USERNAME')
     MYSQL_PASSWORD = environ.get('MYSQL_PASSWORD')
-    MYSQL_HOST = '127.0.0.1'
+    MYSQL_HOST = environ.get('MYSQL_HOST', '127.0.0.1')
     MYSQL_CHARSET = 'utf8'
     ARTICLE_PER_PAGE = 6
     HOTEST_ARTICLE_NUMS = 5

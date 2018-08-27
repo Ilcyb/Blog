@@ -22,8 +22,11 @@ blog-app:
     - MYSQL_USERNAME=root
     - MYSQL_PASSWORD=root
     - TZ=Asia/Shanghai
+    - MYSQL_HOST=mysql5.7
   ports:
     - "5000:5000"
+  links:
+    - mysql5.7
   command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
 
 blog-admin:
@@ -37,8 +40,11 @@ blog-admin:
     - MYSQL_USERNAME=root
     - MYSQL_PASSWORD=root
     - TZ=Asia/Shanghai
+    - MYSQL_HOST=mysql5.7
   ports:
     - "5001:5001"
+  links:
+    - mysql5.7
   command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-admin.ini"
 
 nginx:
