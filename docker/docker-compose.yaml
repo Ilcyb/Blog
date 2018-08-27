@@ -4,7 +4,7 @@ mysql5.7:
   image: "mysql:5.7"
   volumes:
     - /home/hyb/Blog/docker/mysql/config:/etc/my.conf
-    - /home/hyb/Blog/docker/mysql/data:/var/lib/mysql
+    - /home/hyb/Blog/docker/mysql/mysql-data:/var/lib/mysql
   environment:
     - MYSQL_ROOT_PASSWORD=root
     - TZ=Asia/Shanghai
