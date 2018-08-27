@@ -23,7 +23,7 @@ blog-app:
     - TZ=Asia/Shanghai
   ports:
     - "5000:5000"
-  command: "uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
+  command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
 
 blog-admin:
   container_name: "python3.5-uwsgi-blog-admin"
@@ -37,7 +37,7 @@ blog-admin:
     - TZ=Asia/Shanghai
   ports:
     - "5001:5001"
-  command: "uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-admin.ini"
+  command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-admin.ini"
 
 nginx:
   container_name: "nginx"
