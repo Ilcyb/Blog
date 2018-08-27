@@ -16,7 +16,10 @@ RUN apt-get update && apt-get install -y \
     mkdir -p /var/uwsgi && \
     tar zxvf uwsgi-2.0.17.1.tar.gz -C /var/uwsgi && \
     cd /var/uwsgi/uwsgi-2.0.17.1 && \
-    make
+    make && \
+    rm -rf /root/.cache && apt-get autoclean && \
+    apt-get --purge autoremove && \
+    rm -rf /tmp/* /var/lib/apt/* /var/cache/* /var/log/*
 
 EXPOSE 5000
 EXPOSE 5001
