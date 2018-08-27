@@ -8,7 +8,7 @@ from flask import render_template, redirect, url_for, abort, current_app
 def index(methods=['GET']):
     h = DBHelper()
     sql = 'select A.article_id,A.title,A.content,A.time,A.views,C.name from' \
-          ' Article as A left join Category as C on A.category=C.category_id'
+          ' Article as A left join Category as C on A.category=C.category_id order by A.time desc'
     result = [dict(id=article[0], title=article[1], time=article[3].strftime('%Y-%m-%d'), views=article[4], 
                     category=article[5], desc=getShortDescFromContent(article[2]))
               for article in list(h.execute(sql))]
