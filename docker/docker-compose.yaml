@@ -17,6 +17,7 @@ blog-app:
   image: "python3.5-uwsgi"
   volumes:
     - /home/hyb/Blog:/home/Blog
+    - /home/hyb/sockets:/home/socket
   environment:
     - MYSQL_USERNAME=root
     - MYSQL_PASSWORD=root
@@ -31,6 +32,7 @@ blog-admin:
   image: "python3.5-uwsgi"
   volumes:
     - /home/hyb/Blog:/home/Blog
+    - /home/hyb/sockets:/home/socket
   environment:
     - MYSQL_USERNAME=root
     - MYSQL_PASSWORD=root
@@ -45,6 +47,7 @@ nginx:
   image: "nginx:1.15.2-alpine"
   volumes:
     - /home/hyb/Blog/docker/nginx/conf.d:/etc/nginx/conf.d
+    - /home/hyb/sockets:/home/socket
   environment:
     - TZ=Asia/Shanghai
   ports:
