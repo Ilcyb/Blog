@@ -9,6 +9,10 @@ body {
     margin-left: 13%;
 }
 
+.dropdown-menu li {
+    font-size: 20px;
+}
+
 .wrap {
     min-height: 100%;
     margin-bottom: -100px;
