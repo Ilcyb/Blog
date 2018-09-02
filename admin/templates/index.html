@@ -48,16 +48,17 @@
                                 搜索
                             </div>
                             <div class="panel-body">
-                                <form role="form" class="form-inline">
+                                <form role="form" class="form-inline" method="post" action="/search">
                                     <div class="form-group">
-                                        <label for="name">名称</label>
-                                        <input type="text" class="form-control" id="name" placeholder="请输入名称">
+                                        <label for="name">标题</label>
+                                        <input type="text" class="form-control" id="title" name="title" placeholder="请输入标题">
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">标签</label>
-                                        <select class="form-control">
-                                            <option>编程</option>
-                                            <option>生活</option>
+                                        <label for="name">分类</label>
+                                        <select class="form-control" id="category" name="category">
+                                            {% for category in categories %}
+                                            <option value="{{ category['id'] }}">{{ category['name'] }}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -75,7 +76,7 @@
                                     <tr>
                                         <th>文章</th>
                                         <th>创建时间</th>
-                                        <th>标签</th>
+                                        <th>分类</th>
                                         <th>点击量</th>
                                         <th>操作</th>
                                     </tr>
@@ -91,7 +92,7 @@
                                         <td>{{ post.views }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="/edit/{{ post.id }}" class="btn btn-primary">修改</a><a href="" class="btn btn-danger">删除</a>
+                                                <a href="/edit/{{ post.id }}" class="btn btn-primary">修改</a><a href="/delete/{{ post.id }}" class="btn btn-danger">删除</a>
                                             </div>
     
                                         </td>
@@ -100,22 +101,22 @@
                                 </tbody>
                             </table>
                         </div>
-                        <ul class="pagination" style="float: right;">
-                            <li><a href="#">&laquo;</a>
-                            </li>
-                            <li class="active"><a href="#">1</a>
-                            </li>
-                            <li class="disabled"><a href="#">2</a>
-                            </li>
-                            <li><a href="#">3</a>
-                            </li>
-                            <li><a href="#">4</a>
-                            </li>
-                            <li><a href="#">5</a>
-                            </li>
-                            <li><a href="#">&raquo;</a>
-                            </li>
-                        </ul>
+{#                        <ul class="pagination" style="float: right;">#}
+{#                            <li><a href="#">&laquo;</a>#}
+{#                            </li>#}
+{#                            <li class="active"><a href="#">1</a>#}
+{#                            </li>#}
+{#                            <li class="disabled"><a href="#">2</a>#}
+{#                            </li>#}
+{#                            <li><a href="#">3</a>#}
+{#                            </li>#}
+{#                            <li><a href="#">4</a>#}
+{#                            </li>#}
+{#                            <li><a href="#">5</a>#}
+{#                            </li>#}
+{#                            <li><a href="#">&raquo;</a>#}
+{#                            </li>#}
+{#                        </ul>#}
                     </div>
                 </div>
             </div>

@@ -39,7 +39,10 @@ def index():
           ' Article as A left join Category as C on A.category=C.category_id'
     result = [dict(id=article[0], title=article[1], time=article[2].strftime('%Y-%m-%d'), views=article[3], 
                     tag=article[4]) for article in list(h.execute(sql))]
-    return render_template('index.html', posts=result, username=session['username'])
+    sql = 'select category_id, name from Category'
+    categories_result = h.execute(sql)
+    categories = [dict(id=category[0],name=category[1]) for category in categories_result]
+    return render_template('index.html', posts=result, username=session['username'], categories=categories)
 
 @main.route('/post', methods=['GET'])
 @login_required
@@ -108,6 +111,40 @@ def update_post(post_id):
         return redirect(url_for('main.get_edit_post_page', post_id=post_id))
     else:
         return redirect(url_for('main.index'))
+
+@main.route('/delete/<int:post_id>', methods=['GET'])
+@login_required
+def delete_post(post_id):
+    removed_tags_ids, _ = get_removed_tags_ids([], post_id)
+    if len(removed_tags_ids) > 0:
+        delete_tag_list(removed_tags_ids, post_id)
+    h = DBHelper()
+    sql = 'delete from Article where article_id = %s'
+    h.execute(sql, (post_id))
+    return redirect(url_for('main.index'))
+
+@main.route('/search', methods=['POST'])
+@login_required
+def search_posts():
+    title = request.form['title']
+    category = int(request.form['category'])
+    h = DBHelper()
+    sql = "select A.article_id,A.title,A.time,A.views,C.name from" \
+          " Article as A left join Category as C on A.category=C.category_id where "
+    if title:
+        sql += "A.title like '%{}%' or A.category = {}"
+        sql = sql.format(title, category)
+        result = [dict(id=article[0], title=article[1], time=article[2].strftime('%Y-%m-%d'), views=article[3],
+                       tag=article[4]) for article in list(h.execute(sql))]
+    else:
+        sql += "A.category = %d"
+        sql = sql % category
+        result = [dict(id=article[0], title=article[1], time=article[2].strftime('%Y-%m-%d'), views=article[3],
+                       tag=article[4]) for article in list(h.execute(sql))]
+    categories_sql = 'select category_id, name from Category'
+    categories_result = h.execute(categories_sql)
+    categories = [dict(id=category[0],name=category[1]) for category in categories_result]
+    return render_template('index.html', posts=result, username=session['username'], categories=categories)
 
 def insert_tag(tags:str):
     tag_list = tags.split('|')
