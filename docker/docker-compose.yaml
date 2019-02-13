@@ -3,8 +3,8 @@ mysql5.7:
   hostname: "mysql"
   image: "mysql:5.7"
   volumes:
-    - /home/hyb/Blog/docker/mysql/config:/etc/my.conf
-    - /home/hyb/Blog/docker/mysql/mysql-data:/var/lib/mysql
+    - ${BLOG_PATH}/Blog/docker/mysql/config:/etc/my.conf
+    - ${BLOG_PATH}/Blog/docker/mysql/mysql-data:/var/lib/mysql
   environment:
     - MYSQL_ROOT_PASSWORD=root
     - TZ=Asia/Shanghai
@@ -14,10 +14,10 @@ mysql5.7:
 blog-app:
   container_name: "python3.5-uwsgi-blog-app"
   hostname: "blog-app"
-  image: "python3.5-uwsgi"
+  image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.5"
   volumes:
-    - /home/hyb/Blog:/home/Blog
-    - /home/hyb/sockets:/home/socket
+    - ${BLOG_PATH}/Blog:/home/Blog
+    - ${BLOG_PATH}/sockets:/home/socket
   environment:
     - MYSQL_USERNAME=root
     - MYSQL_PASSWORD=root
@@ -32,10 +32,10 @@ blog-app:
 blog-admin:
   container_name: "python3.5-uwsgi-blog-admin"
   hostname: "blog-admin"
-  image: "python3.5-uwsgi"
+  image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.5"
   volumes:
-    - /home/hyb/Blog:/home/Blog
-    - /home/hyb/sockets:/home/socket
+    - ${BLOG_PATH}/Blog:/home/Blog
+    - ${BLOG_PATH}/sockets:/home/socket
   environment:
     - MYSQL_USERNAME=root
     - MYSQL_PASSWORD=root
@@ -52,8 +52,8 @@ nginx:
   hostname: "nginx"
   image: "nginx:1.15.2-alpine"
   volumes:
-    - /home/hyb/Blog/docker/nginx/conf.d:/etc/nginx/conf.d
-    - /home/hyb/sockets:/home/socket
+    - ${BLOG_PATH}/Blog/docker/nginx/conf.d:/etc/nginx/conf.d
+    - ${BLOG_PATH}/sockets:/home/socket
   environment:
     - TZ=Asia/Shanghai
   ports:

@@ -21,5 +21,4 @@ RUN apt-get update && apt-get install -y \
     apt-get --purge autoremove && \
     rm -rf /tmp/* /var/lib/apt/* /var/cache/* /var/log/*
 
-EXPOSE 5000
-EXPOSE 5001
+EXPOSE 80
