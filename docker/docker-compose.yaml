@@ -1,67 +1,76 @@
-version: '2'
+version: '3.5'
 
-mysql5.7:
-  container_name: "mysql5.7"
-  hostname: "mysql"
-  image: "mysql:5.7"
-  volumes:
-    - ${BLOG_PATH}/Blog/docker/mysql/config:/etc/my.conf
-    - ${BLOG_PATH}/Blog/docker/mysql/mysql-data:/var/lib/mysql
-  environment:
-    - MYSQL_ROOT_PASSWORD=${MYSQL_DOCKER_PASSWORD}
-    - TZ=Asia/Shanghai
-  ports:
-    - "3306:3306"
+services:
+  mysql5.7:
+    container_name: "mysql5.7"
+    hostname: "mysql"
+    image: "mysql:5.7"
+    volumes:
+      - ${BLOG_PATH}/Blog/docker/mysql/config:/etc/my.conf
+      - ${BLOG_PATH}/Blog/docker/mysql/mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_DOCKER_PASSWORD}
+      - TZ=Asia/Shanghai
+    ports:
+      - "3306:3306"
+    networks: 
+      - backend_db
 
-blog-app:
-  container_name: "python3.5-uwsgi-blog-app"
-  hostname: "blog-app"
-  image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.5"
-  volumes:
-    - ${BLOG_PATH}/Blog:/home/Blog
-    - ${BLOG_PATH}/sockets:/home/socket
-  environment:
-    - MYSQL_USERNAME=${MYSQL_DOCKER_USERNAME}
-    - MYSQL_PASSWORD=${MYSQL_DOCKER_PASSWORD}
-    - TZ=Asia/Shanghai
-    - MYSQL_HOST=mysql5.7
-  ports:
-    - "5000:5000"
-  links:
-    - mysql5.7
-  command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
+  blog-app:
+    container_name: "python3.5-uwsgi-blog-app"
+    hostname: "blog-app"
+    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.5"
+    volumes:
+      - ${BLOG_PATH}/Blog:/home/Blog
+      - ${BLOG_PATH}/sockets:/home/socket
+    environment:
+      - MYSQL_USERNAME=${MYSQL_DOCKER_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_DOCKER_PASSWORD}
+      - TZ=Asia/Shanghai
+      - MYSQL_HOST=mysql5.7
+    ports:
+      - "5000:5000"
+    networks: 
+      - backend_db
+      - frontend
+    command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
 
-blog-admin:
-  container_name: "python3.5-uwsgi-blog-admin"
-  hostname: "blog-admin"
-  image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.5"
-  volumes:
-    - ${BLOG_PATH}/Blog:/home/Blog
-    - ${BLOG_PATH}/sockets:/home/socket
-  environment:
-    - MYSQL_USERNAME=${MYSQL_DOCKER_USERNAME}
-    - MYSQL_PASSWORD=${MYSQL_DOCKER_PASSWORD}
-    - TZ=Asia/Shanghai
-    - MYSQL_HOST=mysql5.7
-  ports:
-    - "5001:5001"
-  links:
-    - mysql5.7
-  command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-admin.ini"
+  blog-admin:
+    container_name: "python3.5-uwsgi-blog-admin"
+    hostname: "blog-admin"
+    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.5"
+    volumes:
+      - ${BLOG_PATH}/Blog:/home/Blog
+      - ${BLOG_PATH}/sockets:/home/socket
+    environment:
+      - MYSQL_USERNAME=${MYSQL_DOCKER_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_DOCKER_PASSWORD}
+      - TZ=Asia/Shanghai
+      - MYSQL_HOST=mysql5.7
+    ports:
+      - "5001:5001"
+    networks: 
+      - backend_db
+      - frontend
+    command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-admin.ini"
 
-nginx:
-  container_name: "nginx"
-  hostname: "nginx"
-  image: "nginx:1.15.2-alpine"
-  volumes:
-    - ${BLOG_PATH}/Blog/docker/nginx/conf.d:/etc/nginx/conf.d
-    - ${BLOG_PATH}/sockets:/home/socket
-  environment:
-    - TZ=Asia/Shanghai
-  ports:
-    - "80:80"
-    - "443:443"
-  links:
-    - blog-app:blog-app
-    - blog-admin:blog-admin
-  
+  nginx:
+    container_name: "nginx"
+    hostname: "nginx"
+    image: "nginx:1.15.2-alpine"
+    volumes:
+      - ${BLOG_PATH}/Blog/docker/nginx/conf.d:/etc/nginx/conf.d
+      - ${BLOG_PATH}/sockets:/home/socket
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "80:80"
+      - "443:443"
+    networks: 
+      - frontend
+    
+networks:
+  backend_db:
+    driver: bridge
+  frontend:
+    driver: bridge
