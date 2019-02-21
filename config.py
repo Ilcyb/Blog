@@ -9,6 +9,7 @@ class Config:
     HOTEST_ARTICLE_NUMS = 5
     POWERD = 'Tencent Cloud'
     SECRET_KEY = 'H^8dh2{^,?'
+    BEIAN = '粤ICP备19015827号'
 
 class DevConfig(Config):
     MYSQL_DB = 'blog'
