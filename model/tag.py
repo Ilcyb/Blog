@@ -19,3 +19,9 @@ class Tags(Base):
     def __init__(self, name, articles):
         self.name = name
         self.articles = articles
+
+    def get_map_data(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }

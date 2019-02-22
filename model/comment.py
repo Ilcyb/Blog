@@ -19,3 +19,13 @@ class Comments(Base):
         self.time = time
         self.content = content
         self.article = article
+
+    def get_map_data(self):
+        return {
+            'id': self.id,
+            'username': self.username or '匿名',
+            'email': self.email or '无',
+            'time': self.time.strftime('%Y-%m-%d %H:%M'),
+            'content': self.content,
+            'article_id': self.article.id
+        }

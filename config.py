@@ -14,6 +14,8 @@ class Config:
     BEIAN = '粤ICP备19015827号'
 
 class DevConfig(Config):
+    MYSQL_USERNAME = environ.get('MYSQL_USERNAME', 'root')
+    MYSQL_PASSWORD = environ.get('MYSQL_PASSWORD', 'root')
     MYSQL_DB = 'blog'
 
 class TestConfig(Config):

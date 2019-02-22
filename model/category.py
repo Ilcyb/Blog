@@ -14,3 +14,9 @@ class Categories(Base):
 
     def __repr__(self):
         return '[%d]:%s' % (self.id, self.name)
+
+    def get_map_data(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }

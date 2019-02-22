@@ -1,6 +1,7 @@
 from .common import Base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+from .tag import tag_article_table
 
 class Articles(Base):
     __tablename__ = 'Article'
@@ -13,6 +14,7 @@ class Articles(Base):
     category_id = Column('category', Integer, ForeignKey('Category.category_id'))
     category = relationship('Categories', back_populates='articles')
     comments = relationship('Comments', back_populates='article')
+    tags = relationship('Tags', secondary=tag_article_table)
 
     def __init__(self, title, content, time, views, category):
         self.title = title
@@ -20,3 +22,27 @@ class Articles(Base):
         self.time = time
         self.views = views
         self.category = category
+
+    def get_map_data(self):
+        data = {
+            'id': self.id,
+            'title': self.title,
+            'time': self.time.strftime('%Y-%m-%d %H:%M'),
+            'content': self.content,
+            'views': self.views,
+            'category': self.category.name
+        }
+
+        comments = []
+
+        for comment in self.comments:
+            comments.append(comment.get_map_data())
+
+        tags = []
+        for tag in self.tags:
+            tags.append(tag.get_map_data())
+
+        data['comments'] = comments
+        data['tags'] = tags
+
+        return data
