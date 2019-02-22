@@ -13,6 +13,9 @@ session_factory = PyMySqlSessionFactory(
     current_app.config['BLOG_DATABASE']
 )
 
+@blog.route('/', methods=['GET', 'POST'])
+def say_hello():
+    return 'hello'
 
 @blog.route('/articles', methods=['GET'])
 def get_articles():
