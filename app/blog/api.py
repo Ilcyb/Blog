@@ -1,6 +1,8 @@
 from . import blog
 from model import PyMySqlSessionFactory, Articles
 from flask import render_template, redirect, url_for, abort, current_app, request, abort
+from utils import get_page
+from json import loads, dumps
 from sqlalchemy.orm.session import Session
 
 session_factory = PyMySqlSessionFactory(
@@ -23,5 +25,9 @@ def get_articles():
     if page <= 0 or size <= 0:
         abort(400)
 
+    offset, limit = get_page(page, size)
+
     session = session_factory.get_session()
-    session.query(Articles)
+    articles = session.query(Articles).offset(offset).limit(limit).order_by(Articles.id)
+
+    return dumps({'data': articles})
