@@ -70,10 +70,10 @@ def login():
     resp.headers['Content-Type'] = 'application/json'
     resp.body = json.dumps({'msg': 'ok'})
     resp.status_code = 200
-    resp.set_cookie('user_id', 
+    resp.set_cookie('user_id',
                     str(user.id),
                     max_age=current_app.config['COOKIE_EXPIRE'])
-    resp.set_cookie('username', 
+    resp.set_cookie('username',
                     user.username,
                     max_age=current_app.config['COOKIE_EXPIRE'])
 
@@ -207,7 +207,7 @@ def delete_article(post_id):
     sessionFactory = getSessionFactory()
     session = sessionFactory.get_session()
     article = session.query(Articles).filter(Articles.id == post_id).first()
-    
+
     if not article:
         abort(404, 'article not found')
 
@@ -217,4 +217,26 @@ def delete_article(post_id):
     return jsonify({'msg': 'ok'})
 
 
-# @main.route('/post/')
+@main.route('/post/keyword/<keyword>', methods=['GET'])
+@login_required
+def search_articles(keyword):
+    query_data = request.args
+
+    page = int(query_data.get('page', 1))
+    size = int(query_data.get('size', current_app.config['ARTICLE_PER_PAGE']))
+
+    if page <= 0 or size <= 0:
+        abort(400)
+
+    offset, limit = get_page(page, size)
+
+    sessionFactory = getSessionFactory()
+    session = sessionFactory.get_session()
+    articles = session.query(Articles).filter(Articles.title.like(f"%{keyword}%")).order_by(
+        Articles.id).offset(offset).limit(limit).all()
+    
+    datas = []
+    for article in articles:
+        datas.append(article.get_map_data())
+
+    return jsonify({'datas': datas, 'pager': {'page': page, 'size': size}})
