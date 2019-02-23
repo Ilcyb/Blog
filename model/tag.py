@@ -16,9 +16,8 @@ class Tags(Base):
     name = Column('name', String)
     articles = relationship('Articles', secondary=tag_article_table)
 
-    def __init__(self, name, articles):
+    def __init__(self, name):
         self.name = name
-        self.articles = articles
 
     def get_map_data(self):
         return {

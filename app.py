@@ -3,9 +3,10 @@ from admin import create_admin_app
 from flaskext.markdown import Markdown
 from datetime import datetime
 from flask import current_app
+from os import environ
 
-app = create_app()
-admin_app = create_admin_app()
+app = create_app(environ.get('ENV', 'dev'))
+admin_app = create_admin_app(environ.get('ENV', 'dev'))
 Markdown(app)
 
 @app.context_processor
@@ -19,6 +20,3 @@ def inject_power():
 @app.context_processor
 def inject_beian():
     return {'beian': current_app.config['BEIAN']}
-
-if __name__ == '__main__':
-    app.run(debug=True)
