@@ -1,6 +1,6 @@
 from flask import Flask
 from config import configs
-from .blog import blog
+from .backend import blog
 
 def create_app(config='default'):
     app = Flask(__name__)

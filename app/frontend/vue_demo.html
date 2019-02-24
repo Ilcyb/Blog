@@ -1,0 +1,62 @@
+<html>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+<link rel="stylesheet" href="./base.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<body>
+
+
+    <div class="container card">
+        <div class="row">
+            <ul class="nav nav-pills col-md-6">
+                <li><a href="/">ilcyb</a></li>
+                <li>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                        aria-expanded="false">
+                        分类 <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu category" id="category">
+                        
+                        <li v-for="(item, index) in items" :key="index">
+                            <a :href="'/category/' + item.id">
+                            {{ item.name }}
+                            </a>
+                    </ul>
+                </li>
+                <li><a href="#">归档</a></li>
+                <li><a href="#">关于</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container card">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 blog-name">
+                <h1>Ilcyb's Blog</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class=""
+
+</body>
+
+<script>
+    var category_list = new Vue({
+        el: "#category",
+        data: {
+            items: [
+                {id:1, name:"编程"},
+                {id:2, name:"生活"},
+                {id:3, name:"读书"},
+                {id:4, name:"电影"},
+            ]
+        }
+    })
+</script>
+
+</html>
