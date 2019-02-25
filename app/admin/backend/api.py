@@ -2,7 +2,7 @@ from flask import current_app, request, abort, Request, jsonify, make_response, 
 from model import getSessionFactory, Articles, Categories, Tags, Admin
 from functools import wraps
 from utils import enctry_string, dectry_string, get_page
-from . import main
+from . import admin
 import json
 
 
@@ -29,7 +29,7 @@ def login_required(func):
     return handle_args
 
 
-@main.route('/loginStatus', methods=['GET'])
+@admin.route('/loginStatus', methods=['GET'])
 def get_login_status():
     user_id = request.cookies.get('user_id', None)
     username = request.cookies.get('username', None)
@@ -49,7 +49,7 @@ def get_login_status():
     return jsonify({'status': True})
 
 
-@main.route('/loginStatus', methods=['POST'])
+@admin.route('/loginStatus', methods=['POST'])
 def login():
     username = request.json.get('username')
     password = request.json.get('password')
@@ -80,7 +80,7 @@ def login():
     return resp
 
 
-@main.route('/loginStatus', methods=['DELETE'])
+@admin.route('/loginStatus', methods=['DELETE'])
 def logout():
     resp = make_response()
     resp.headers['Content-Type'] = 'application/json'
@@ -92,7 +92,7 @@ def logout():
     return resp
 
 
-@main.route('/posts', methods=['GET'])
+@admin.route('/posts', methods=['GET'])
 @login_required
 def get_articles():
     query_data = request.args
@@ -116,7 +116,7 @@ def get_articles():
     return jsonify({'datas': datas, 'pager': {'page': page, 'size': size}})
 
 
-@main.route('/post/<int:post_id>', methods=['GET'])
+@admin.route('/post/<int:post_id>', methods=['GET'])
 @login_required
 def get_article(post_id):
     session = getSessionFactory().get_session()
@@ -126,7 +126,7 @@ def get_article(post_id):
     return jsonify(article.get_map_data())
 
 
-@main.route('/post', methods=['POST'])
+@admin.route('/post', methods=['POST'])
 @login_required
 def create_article():
     data = request.json
@@ -157,7 +157,7 @@ def create_article():
     return jsonify({'msg': 'ok'})
 
 
-@main.route('/post/<int:post_id>', methods=['PUT'])
+@admin.route('/post/<int:post_id>', methods=['PUT'])
 @login_required
 def update_article(post_id):
     data = request.json
@@ -201,7 +201,7 @@ def update_article(post_id):
     return jsonify({'msg': 'ok'})
 
 
-@main.route('/post/<int:post_id>', methods=['DELETE'])
+@admin.route('/post/<int:post_id>', methods=['DELETE'])
 @login_required
 def delete_article(post_id):
     sessionFactory = getSessionFactory()
@@ -217,7 +217,7 @@ def delete_article(post_id):
     return jsonify({'msg': 'ok'})
 
 
-@main.route('/post/keyword/<keyword>', methods=['GET'])
+@admin.route('/post/keyword/<keyword>', methods=['GET'])
 @login_required
 def search_articles(keyword):
     query_data = request.args
