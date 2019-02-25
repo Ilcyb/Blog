@@ -18,3 +18,7 @@ def inject_power():
 @app.context_processor
 def inject_beian():
     return {'beian': current_app.config['BEIAN']}
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

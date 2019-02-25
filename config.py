@@ -14,6 +14,12 @@ class Config:
     FERNET = Fernet(FERNET_KEY)
     COOKIE_EXPIRE = 3 * 60 * 60
     BEIAN = '粤ICP备19015827号'
+    ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
+    MAX_CONTENT_LENGTH = 1024 * 1024 * 10
+    QINIU_ACCESS_KEY = environ.get('QINIU_ACCESS_KEY')
+    QINIU_SECRET_KEY = environ.get('QINIU_SECRET_KEY')
+    QINIU_BUCKET_NAME = environ.get('QINIU_BUCKET_NAME')
+    QINIU_BUCKET_URL = environ.get('QINIU_BUCKET_URL')
 
 class DevConfig(Config):
     MYSQL_USERNAME = environ.get('MYSQL_USERNAME', 'root')

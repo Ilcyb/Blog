@@ -46,3 +46,13 @@ create table if not exists `admin`(
     `password` varchar(128),
     primary key (`admin_id`)
 )engine=InnoDB default charset=utf8;
+
+create table if not exists `Resource`(
+    `resource_id` int auto_increment,
+    `user_type` tinyint(1),
+    `file_name` varchar(128),
+    `file_type` tinyint(1),
+    `url` varchar(255),
+    `time` datetime not null default now(),
+    primary key (`resource_id`)
+)engine=InnoDB default charset=utf8;

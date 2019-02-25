@@ -1,7 +1,7 @@
 from flask import current_app, request, abort, Request, jsonify, make_response, Response
-from model import getSessionFactory, Articles, Categories, Tags, Admin
+from model import getSessionFactory, Articles, Categories, Tags, Admin, Resources
 from functools import wraps
-from utils import enctry_string, dectry_string, get_page
+from utils import enctry_string, dectry_string, get_page, allowed_file, upload_file_to_qiniu, get_file_extension, get_file_type
 from . import admin
 import json
 
@@ -234,9 +234,42 @@ def search_articles(keyword):
     session = sessionFactory.get_session()
     articles = session.query(Articles).filter(Articles.title.like(f"%{keyword}%")).order_by(
         Articles.id).offset(offset).limit(limit).all()
-    
+
     datas = []
     for article in articles:
         datas.append(article.get_map_data())
 
     return jsonify({'datas': datas, 'pager': {'page': page, 'size': size}})
+
+
+@admin.route('/resource', methods=['POST'])
+@login_required
+def upload_resource():
+    if 'file' not in request.files:
+        abort(400, 'no file has been uploaded.')
+    file = request.files['file']
+    if file.filename == '':
+        abort(400, 'no file has been uploaded')
+
+    file_extension = get_file_extension(file.filename)
+    if file and allowed_file(file_extension, current_app.config['ALLOWED_EXTENSIONS']):
+        ret = upload_file_to_qiniu(current_app.config['QINIU_ACCESS_KEY'],
+                             current_app.config['QINIU_SECRET_KEY'], 
+                             current_app.config['QINIU_BUCKET_NAME'], 
+                             file.filename, file.read())
+        if not ret['ret']:
+            abort(500, ret['msg'])
+    else:
+        abort(400, 'not allowed file type.')
+    
+    url = f"http://{current_app.config['QINIU_BUCKET_URL']}/{ret['key']}"
+    file_type = get_file_type(file_extension)
+    
+    sessionFactory = getSessionFactory()
+    session = sessionFactory.get_session()
+
+    new_resource = Resources(0, file.filename, file_type, url)
+    session.add(new_resource)
+    session.commit()
+
+    return jsonify({'msg': 'ok'})
