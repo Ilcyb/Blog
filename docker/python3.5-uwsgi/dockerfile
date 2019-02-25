@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install -y \
     apt-get autoremove && \
     rm -r /var/lib/apt/lists/* && \
     pip3 install --upgrade pip setuptools && \
-    pip3 install -r /home/requirements.txt && \
     wget https://projects.unbit.it/downloads/uwsgi-2.0.17.1.tar.gz && \
     mkdir -p /var/uwsgi && \
     tar zxvf uwsgi-2.0.17.1.tar.gz -C /var/uwsgi && \
@@ -20,5 +19,7 @@ RUN apt-get update && apt-get install -y \
     rm -rf /root/.cache && apt-get autoclean && \
     apt-get --purge autoremove && \
     rm -rf /tmp/* /var/lib/apt/* /var/cache/* /var/log/*
+
+RUN pip3 install -r /home/requirements.txt
 
 EXPOSE 80
