@@ -1,7 +1,5 @@
 FROM python:3.6.4
 
-COPY requirements.txt /home/requirements.txt
-
 RUN apt-get update && apt-get install -y \
     build-essential \
 	python3 \
@@ -19,6 +17,8 @@ RUN apt-get update && apt-get install -y \
     rm -rf /root/.cache && apt-get autoclean && \
     apt-get --purge autoremove && \
     rm -rf /tmp/* /var/lib/apt/* /var/cache/* /var/log/*
+
+COPY requirements.txt /home/requirements.txt
 
 RUN pip3 install -r /home/requirements.txt
 
