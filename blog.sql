@@ -30,7 +30,8 @@ create table if not exists `Comment`(
     `email` varchar(30),
     `time` datetime not null default now(),
     `content` varchar(140) not null,
-    `article_id` int not null,
+    `type` tinyint(1) not null COMMENT '0 该评论是回复文章的 1 该评论是回复评论的',
+    `respondent_id` int not null,
     primary key (`comment_id`)
 )engine=InnoDB default charset=utf8;
 

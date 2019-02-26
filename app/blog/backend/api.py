@@ -76,3 +76,8 @@ def get_articles_by_category(category_id):
         datas.append(article.get_map_data())
 
     return jsonify({'datas': datas, 'pager': {'page': page, 'size': size}})
+
+
+@blog.route('/post/<int:post_id>/comment', methods=['POST'])
+def comment_post(post_id):
+    
