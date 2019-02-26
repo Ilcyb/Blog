@@ -17,9 +17,9 @@ def login_required(func):
 
         sessionFactory = getSessionFactory()
         query_session = sessionFactory.get_session()
-
         user = query_session.query(Admin).filter(
             Admin.id == int(user_id), Admin.username == username).first()
+        query_session.close()
 
         if user is None:
             abort(401, 'unauthorized')
@@ -39,9 +39,9 @@ def get_login_status():
 
     sessionFactory = getSessionFactory()
     session = sessionFactory.get_session()
-
     user = session.query(Admin).filter(
         Admin.id == int(user_id), Admin.username == username).first()
+    session.close()
 
     if user is None:
         return jsonify({'status': False})
@@ -59,9 +59,9 @@ def login():
 
     sessionFactory = getSessionFactory()
     session = sessionFactory.get_session()
-
     user = session.query(Admin).filter(
         Admin.username == username, Admin.password == password).first()
+    session.close()
 
     if user is None:
         abort(401, 'wrong password')
@@ -108,6 +108,7 @@ def get_articles():
     session = getSessionFactory().get_session()
     articles = session.query(Articles).order_by(
         Articles.id).offset(offset).limit(limit).all()
+    session.close()
 
     datas = []
     for article in articles:
@@ -121,6 +122,7 @@ def get_articles():
 def get_article(post_id):
     session = getSessionFactory().get_session()
     article = session.query(Articles).filter(Articles.id == post_id).first()
+    session.close()
     if not article:
         abort(404)
     return jsonify(article.get_map_data())
@@ -141,7 +143,6 @@ def create_article():
         abort(400, 'invalid request')
 
     session = getSessionFactory().get_session()
-
     article = Articles(title, content, time, 0, category)
     session.add(article)
 
@@ -153,6 +154,7 @@ def create_article():
         session.add(this_tag)
 
     session.commit()
+    session.close()
 
     return jsonify({'msg': 'ok'})
 
@@ -197,6 +199,7 @@ def update_article(post_id):
         article.tags.remove(this_tag_model)
 
     session.commit()
+    session.close()
 
     return jsonify({'msg': 'ok'})
 
@@ -213,6 +216,7 @@ def delete_article(post_id):
 
     session.delete(article)
     session.commit()
+    session.close()
 
     return jsonify({'msg': 'ok'})
 
@@ -234,6 +238,7 @@ def search_articles(keyword):
     session = sessionFactory.get_session()
     articles = session.query(Articles).filter(Articles.title.like(f"%{keyword}%")).order_by(
         Articles.id).offset(offset).limit(limit).all()
+    session.close()
 
     datas = []
     for article in articles:
@@ -271,5 +276,6 @@ def upload_resource():
     new_resource = Resources(0, file.filename, file_type, url)
     session.add(new_resource)
     session.commit()
+    session.close()
 
     return jsonify({'msg': 'ok'})

@@ -1,5 +1,4 @@
 from os import environ, urandom
-from cryptography.fernet import Fernet
 
 class Config:
     MYSQL_USERNAME = environ.get('MYSQL_USERNAME')
@@ -10,8 +9,6 @@ class Config:
     HOTEST_ARTICLE_NUMS = 5
     POWERD = 'Tencent Cloud'
     SECRET_KEY = urandom(24)
-    FERNET_KEY = Fernet.generate_key()
-    FERNET = Fernet(FERNET_KEY)
     COOKIE_EXPIRE = 3 * 60 * 60
     BEIAN = '粤ICP备19015827号'
     ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])

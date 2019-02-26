@@ -24,6 +24,8 @@ def get_articles():
     datas = []
     for article in articles:
         datas.append(article.get_map_data())
+    
+    session.close()
 
     return jsonify({'datas': datas, 'pager': {'page': page, 'size': size}})
 
@@ -32,6 +34,8 @@ def get_articles():
 def get_article(post_id):
     session = getSessionFactory().get_session()
     article = session.query(Articles).filter(Articles.id == post_id).first()
+    session.close()
+
     if not article:
         abort(404)
     return jsonify(article.get_map_data())
@@ -41,6 +45,7 @@ def get_article(post_id):
 def get_categories():
     session = getSessionFactory().get_session()
     categories = session.query(Categories).order_by(Categories.id).all()
+    session.close()
 
     datas = []
     for category in categories:
@@ -64,6 +69,7 @@ def get_articles_by_category(category_id):
     session = getSessionFactory().get_session()
     articles = session.query(Articles).filter(Articles.category_id == category_id).order_by(
         Articles.id).offset(offset).limit(limit).all()
+    session.close()
 
     datas = []
     for article in articles:
