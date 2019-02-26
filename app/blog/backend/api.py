@@ -1,5 +1,5 @@
 from . import blog
-from model import getSessionFactory, Articles, Categories
+from model import getSessionFactory, Articles, Categories, Comments
 from flask import render_template, redirect, url_for, abort, current_app, request, abort, jsonify
 from utils import get_page
 from sqlalchemy.orm.session import Session
@@ -34,11 +34,14 @@ def get_articles():
 def get_article(post_id):
     session = getSessionFactory().get_session()
     article = session.query(Articles).filter(Articles.id == post_id).first()
+    if not article:
+        session.close()
+        abort(404)
+
+    data = article.get_map_data()
     session.close()
 
-    if not article:
-        abort(404)
-    return jsonify(article.get_map_data())
+    return jsonify(data)
 
 
 @blog.route('/categories', methods=['GET'])
@@ -80,4 +83,43 @@ def get_articles_by_category(category_id):
 
 @blog.route('/post/<int:post_id>/comment', methods=['POST'])
 def comment_post(post_id):
+    data = request.json
+
+    username = data.get('username', None)
+    email = data.get('email', None)
+    content = data.get('content', None)
+    comment_type = 0
+
+    if not username or not content:
+        abort(400, 'bad request')
     
+    session_factory = getSessionFactory()
+    session = session_factory.get_session()
+    new_comment = Comments(username, email, None, content, post_id, comment_type, None)
+    session.add(new_comment)
+    session.commit()
+    session.close()
+
+    return jsonify({'ret': True})
+
+
+@blog.route('/post/<int:post_id>/comment/<int:comment_id>/comment', methods=['POST'])
+def comment_comment(post_id, comment_id):
+    data = request.json
+
+    username = data.get('username', None)
+    email = data.get('email', None)
+    content = data.get('content', None)
+    comment_type = 1
+
+    if not username or not content:
+        abort(400, 'bad request')
+    
+    session_factory = getSessionFactory()
+    session = session_factory.get_session()
+    new_comment = Comments(username, email, None, content, post_id, comment_type, comment_id)
+    session.add(new_comment)
+    session.commit()
+    session.close()
+
+    return jsonify({'ret': True})

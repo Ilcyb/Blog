@@ -1,6 +1,7 @@
 from .common import Base
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+import datetime
 
 class Comments(Base):
     __tablename__ = 'Comment'
@@ -8,19 +9,19 @@ class Comments(Base):
     id = Column('comment_id', Integer, primary_key=True)
     username = Column('username', String)
     email = Column('email', String)
-    time = Column('time', DateTime)
+    time = Column('time', DateTime, default=datetime.datetime.now)
     content = Column('content', String)
     comment_type = Column('type', Integer)
     article_id = Column('article_id', Integer, ForeignKey('Article.article_id'))
     article = relationship('Articles', back_populates='comments')
     respondent_id = Column('respondent_id', Integer)
 
-    def __init__(self, username, email, time, content, article, comment_type, respondent_id):
+    def __init__(self, username, email, time, content, article_id, comment_type, respondent_id):
         self.username = username
         self.email = email
         self.time = time
         self.content = content
-        self.article = article
+        self.article_id = article_id
         self.comment_type = comment_type
         self.respondent_id = respondent_id
 
