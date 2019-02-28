@@ -8,8 +8,9 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="./style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9/dist/showdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.18/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 </head>
@@ -42,34 +43,46 @@
 
     <div class="container blog-main">
         <div class="col-md-9 blog-main-left">
-            <div class="post card container">
-                <div class="row">
-                    <a href="#" class="col-md-6 post-title">Linux下Nvidia显卡驱动的安装</a>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 post-time">
-                        <p>2019年2月18日</p>
+            <div id="post-intro">
+                <div class="post card container-fluid" v-for="post in posts">
+                    <div class="row">
+                        <a href="#" class="col-md-12 post-title">{{ post.title }}</a>
                     </div>
-                    <ul class="col-md-6 col-md-offset-1 post-tags">
-                        <li>
-                            <a href="#">编程</a>
-                        </li>
-                        <li>
-                            <a href="#">生活</a>
-                        </li>
-                    </ul>
+                    <div class="row">
+                        <div class="col-md-12 post-time">
+                            <p>{{ post.time }}</p>
+                        </div>
+                        <!-- <ul class="col-md-6 col-md-offset-1 post-tags">
+                            <li v-for="tag in post.tags">
+                                <a :href="'/tag/' + tag.id">
+                                    {{ tag.name }}
+                                </a>
+                            </li>
+                        </ul> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 post-intro">
+                            <div v-html="post.content"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 container blog-main-right">
-
+            <div class="about-me-simple card container-fluid" id="about-me">
+                <div v-html="describetion"></div>
+            </div>
         </div>
     </div>
 
 </body>
 
 <script>
+    var base_url = "http://ilcyb.local";
+    var converter = new showdown.Converter({
+        parseImgDimensions: true
+    });
     var category_list = new Vue({
         el: "#category",
         data: {
@@ -90,6 +103,66 @@
                     name: "电影"
                 },
             ]
+        }
+    });
+
+    var post_introductions = new Vue({
+        el: "#post-intro",
+        data: {
+            posts: []
+        },
+        created: function () {
+            this.getPosts();
+        },
+        methods: {
+            convertMarkdown2Html: function (markdown) {
+                html = converter.makeHtml(markdown);
+                console.log(html);
+                return html;
+            },
+            getPosts: function (page) {
+                axios.get(base_url + "/blog/api/posts", {
+                        params: {
+                            page: page
+                        }
+                    })
+                    .then(res => {
+                        for (let i = 0; i < res['data']['datas'].length; i++) {
+                            res['data']['datas'][i].content = this.convertMarkdown2Html(res['data'][
+                                'datas'
+                            ][i].content);
+                        }
+                        this.posts = res['data']['datas'];
+                    })
+                    .catch(err => {
+                        // TODO alert
+                    })
+            }
+        },
+    });
+
+    var abot_me = new Vue({
+        el: "#about-me",
+        data: {
+            describetion: ''
+        },
+        created: function () {
+            this.getDescribetion();
+        },
+        methods: {
+            getDescribetion: function () {
+                axios.get(base_url + "/blog/api/about/simple")
+                    .then(res => {
+                        if (res['data']['parse_type'] == 'markdown') {
+                            this.describetion = converter.makeHtml(res['data']['describetion']);
+                        } else if (res['data']['parse_type'] == 'html') {
+                            this.describetion = res['data']['describetion'];
+                        }
+                    })
+                    .catch(err => {
+                        // TODO alert
+                    })
+            }
         }
     })
 </script>

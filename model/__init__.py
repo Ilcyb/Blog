@@ -5,3 +5,4 @@ from .category import Categories
 from .comment import Comments
 from .tag import Tags
 from .resource import Resources
+from .about import About

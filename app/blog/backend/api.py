@@ -1,5 +1,5 @@
 from . import blog
-from model import getSessionFactory, Articles, Categories, Comments
+from model import getSessionFactory, Articles, Categories, Comments, About
 from flask import render_template, redirect, url_for, abort, current_app, request, abort, jsonify
 from utils import get_page
 from sqlalchemy.orm.session import Session
@@ -123,3 +123,16 @@ def comment_comment(post_id, comment_id):
     session.close()
 
     return jsonify({'ret': True})
+
+
+@blog.route('/about/simple', methods=['GET'])
+def get_simple_about_me():
+    session_factory = getSessionFactory()
+    session = session_factory.get_session()
+    about = session.query(About).filter(About.type == 0).first()
+    session.close()
+
+    if not about:
+        return jsonify({})
+
+    return jsonify(about.get_map_data())

@@ -58,3 +58,11 @@ create table if not exists `Resource`(
     `time` datetime not null default now(),
     primary key (`resource_id`)
 )engine=InnoDB default charset=utf8;
+
+create table if not exists `About`(
+    `about_id` int auto_increment,
+    `type` tinyint(1) not null COMMENT '0 简单介绍 1 详细介绍',
+    `parse_type` tinyint(1) not null COMMENT '0 markdown 1 html',
+    `describetion` text not null,
+    primary key (`about_id`)
+)engine=InnoDB default charset=utf8;
