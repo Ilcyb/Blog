@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
     <link rel="stylesheet" href="./style.css">
+    <script src="./utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9/dist/showdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.18/dist/axios.min.js"></script>
@@ -16,7 +17,6 @@
 </head>
 
 <body>
-
 
     <div class="container card">
         <div class="row">
@@ -43,12 +43,10 @@
 
     <div class="container blog-main">
         <div class="col-md-9 blog-main-left">
-            <div id="post-intro">
-                <div class="post card container-fluid" v-for="post in posts">
+            <div id="post">
+                <div class="post card container-fluid">
                     <div class="row">
-                        <div class="col-md-12 post-title">
-                            <a :href="'post.html?id=' + post.id">{{ post.title }}</a>
-                        </div>
+                        <p class="col-md-12 post-title">{{ post.title }}</p>
                     </div>
                     <div class="row">
                         <div class="col-md-12 post-time">
@@ -56,16 +54,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 post-intro">
+                        <div class="col-md-12">
                             <div v-html="post.content"></div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            
-            <div class="container-fluid card more-post">
-                <a href="#">更多文章...</a>
             </div>
         </div>
 
@@ -82,6 +75,8 @@
                 </ul>
             </div>
         </div>
+
+    </div>
     </div>
 
     <div class="container footer" id="footer">
@@ -108,54 +103,20 @@
         data: {
             items: []
         },
-        created: function() {
+        created: function () {
             this.getCategories();
         },
         methods: {
-            getCategories: function() {
+            getCategories: function () {
                 axios.get(base_url + "/blog/api/categories")
-                .then(res => {
-                    this.items = res['data']['datas'];
-                })
-                .catch(err => {
-                    // TODO
-                })
-            }
-        }
-    });
-
-    var post_introductions = new Vue({
-        el: "#post-intro",
-        data: {
-            posts: []
-        },
-        created: function () {
-            this.getPosts();
-        },
-        methods: {
-            convertMarkdown2Html: function (markdown) {
-                html = converter.makeHtml(markdown);
-                return html;
-            },
-            getPosts: function (page) {
-                axios.get(base_url + "/blog/api/posts", {
-                        params: {
-                            page: page
-                        }
-                    })
                     .then(res => {
-                        for (let i = 0; i < res['data']['datas'].length; i++) {
-                            res['data']['datas'][i].content = this.convertMarkdown2Html(res['data'][
-                                'datas'
-                            ][i].content);
-                        }
-                        this.posts = res['data']['datas'];
+                        this.items = res['data']['datas'];
                     })
                     .catch(err => {
-                        // TODO alert
+                        // TODO
                     })
             }
-        },
+        }
     });
 
     var abot_me = new Vue({
@@ -183,23 +144,52 @@
         }
     })
 
+    var post = new Vue({
+        el: "#post",
+        data: {
+            post: {}
+        },
+        created: function () {
+            let url_params = getQueryStrings();
+            let post_id = url_params['id'];
+            if (!post_id) {
+                goNotFoundPage();
+            }
+            this.getPost(post_id);
+        },
+        methods: {
+            getPost: function (post_id) {
+                axios.get(base_url + "/blog/api/post/" + post_id)
+                    .then(res => {
+                        res['data']['content'] = converter.makeHtml(res['data']['content']);
+                        this.post = res['data'];
+                    })
+                    .catch(err => {
+                        if (err.response.status == 404) {
+                            goNotFoundPage();
+                        }
+                    })
+            }
+        }
+    })
+
     var tags = new Vue({
         el: "#tags",
         data: {
             tags: []
         },
-        created: function() {
+        created: function () {
             this.getTags();
         },
         methods: {
-            getTags: function() {
+            getTags: function () {
                 axios.get(base_url + "/blog/api/tags")
-                .then(res => {
-                    this.tags = res['data']['datas'];
-                })
-                .catch(err => {
-                    // TODO
-                })
+                    .then(res => {
+                        this.tags = res['data']['datas'];
+                    })
+                    .catch(err => {
+                        // TODO
+                    })
             }
         }
     })
@@ -215,27 +205,25 @@
             beian_url: '',
             current_year: ''
         },
-        created: function() {
+        created: function () {
             this.getFooterInfo();
         },
         methods: {
-            getFooterInfo: function() {
+            getFooterInfo: function () {
                 axios.get(base_url + "/blog/api/footer")
-                .then(res => {
-                    this.name = res['data']['name'];
-                    this.email = res['data']['email'];
-                    this.power = res['data']['power'];
-                    this.power_url = res['data']['power_url'];
-                    this.beian = res['data']['beian'];
-                    this.beian_url = res['data']['beian_url'];
-                    this.current_year = res['data']['current_year'];
-                })
-                .catch(err => {
-                    // TODO
-                })
+                    .then(res => {
+                        this.name = res['data']['name'];
+                        this.email = res['data']['email'];
+                        this.power = res['data']['power'];
+                        this.power_url = res['data']['power_url'];
+                        this.beian = res['data']['beian'];
+                        this.beian_url = res['data']['beian_url'];
+                        this.current_year = res['data']['current_year'];
+                    })
+                    .catch(err => {
+                        // TODO
+                    })
             }
         }
     })
 </script>
-
-</html>

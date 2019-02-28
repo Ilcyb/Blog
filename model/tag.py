@@ -19,6 +19,9 @@ class Tags(Base):
     def __init__(self, name):
         self.name = name
 
+    def __repr__(self):
+        return f"[{self.id}]({self.name})"
+
     def get_map_data(self):
         return {
             'id': self.id,

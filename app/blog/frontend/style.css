@@ -25,7 +25,7 @@ div.blog-main {
 }
 
 div.blog-main-left {
-    padding: 0 10px 0 0;
+    padding: 0 0 0 0;
 }
 
 div.blog-main-right {
@@ -50,7 +50,7 @@ ul.category a{
     font-size: 20px;
 }
 
-a.post-title {
+div.post-title {
     color: #4078c0;
     font-size: 30px;
     margin: 16px 0 0 0;
@@ -95,8 +95,60 @@ div.about-me-simple {
     font-size: 16px;
 }
 
-div.pagi {
+div.more-post {
     text-align: center;
-    font-size: 20px;
+    padding: 20px 0 20px 0;
+}
+
+div.more-post a{
+    font-size: 18px;
+}
+
+div.footer {
     padding: 0;
+    margin-bottom: 20px;
+}
+
+div.footer hr {
+    line-height: 1px;
+    border-bottom: 1px solid #708090;
+}
+
+div.footer-info {
+    text-align: center;
+}
+
+div.footer-info a {
+    display: inline;
+}
+
+div.footer-info p {
+    display: inline;
+}
+
+div.post {
+    font-size: 18px;
+}
+
+div.post img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+p.post-title {
+    color: #4078c0;
+    font-size: 30px;
+    margin: 16px 0 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+div.tags ul {
+    padding: 0;
+}
+
+div.tags li {
+    list-style-type: none;
+    float: left;
+    margin: 8px;
 }
