@@ -94,3 +94,9 @@ div.post-intro img{
 div.about-me-simple {
     font-size: 16px;
 }
+
+div.pagi {
+    text-align: center;
+    font-size: 20px;
+    padding: 0;
+}
