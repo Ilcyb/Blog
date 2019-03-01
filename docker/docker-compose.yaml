@@ -19,7 +19,7 @@ services:
   redis5.0:
     container_name: "redis5.0"
     hostname: "redis"
-    images: "redis:5.0-alpine"
+    image: "redis:5.0-alpine"
     ports:
       - "6379:6379"
     networks:
@@ -28,7 +28,7 @@ services:
   blog-app:
     container_name: "python3-uwsgi-blog-app"
     hostname: "blog-app"
-    image: "registry-vpc.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:alpine-3.6.2"
+    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:alpine-3.6.2"
     volumes:
       - ${BLOG_PATH}/Blog:/home/Blog
       - ${BLOG_PATH}/sockets:/home/socket
