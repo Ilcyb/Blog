@@ -3,6 +3,7 @@ from model import getSessionFactory, Articles, Categories, Comments, About, Tags
 from flask import render_template, redirect, url_for, abort, current_app, request, abort, jsonify
 from utils import get_page
 from sqlalchemy.orm.session import Session
+from sqlalchemy import func
 import datetime
 
 
@@ -37,7 +38,8 @@ def get_articles():
 def get_article(post_id):
     try:
         session = getSessionFactory().get_session()
-        article = session.query(Articles).filter(Articles.id == post_id).first()
+        article = session.query(Articles).filter(
+            Articles.id == post_id).first()
         if not article:
             session.close()
             abort(404)
@@ -83,6 +85,11 @@ def get_articles_by_category(category_id):
 
     try:
         session = getSessionFactory().get_session()
+        category = session.query(Categories).filter(
+            Categories.id == category_id).first()
+        if not category:
+            abort(404, 'no such category')
+
         articles = session.query(Articles).filter(Articles.category_id == category_id).order_by(
             Articles.id).offset(offset).limit(limit).all()
 
@@ -94,7 +101,7 @@ def get_articles_by_category(category_id):
     finally:
         session.close()
 
-    return jsonify({'datas': datas, 'pager': {'page': page, 'size': size}})
+    return jsonify({'posts': datas, 'id': category.id, 'name': category.name, 'pager': {'page': page, 'size': size}})
 
 
 @blog.route('/post/<int:post_id>/comment', methods=['POST'])
@@ -108,11 +115,12 @@ def comment_post(post_id):
 
     if not username or not content:
         abort(400, 'bad request')
-    
+
     try:
         session_factory = getSessionFactory()
         session = session_factory.get_session()
-        new_comment = Comments(username, email, None, content, post_id, comment_type, None)
+        new_comment = Comments(username, email, None,
+                               content, post_id, comment_type, None)
         session.add(new_comment)
         session.commit()
     except Exception as e:
@@ -134,11 +142,12 @@ def comment_comment(post_id, comment_id):
 
     if not username or not content:
         abort(400, 'bad request')
-    
+
     try:
         session_factory = getSessionFactory()
         session = session_factory.get_session()
-        new_comment = Comments(username, email, None, content, post_id, comment_type, comment_id)
+        new_comment = Comments(username, email, None,
+                               content, post_id, comment_type, comment_id)
         session.add(new_comment)
         session.commit()
     except Exception as e:
@@ -201,3 +210,62 @@ def get_tags():
         session.close()
 
     return jsonify({'datas': datas})
+
+
+@blog.route('/tag/<int:tag_id>/posts', methods=['GET'])
+def get_tag_articles(tag_id):
+    try:
+        session_factory = getSessionFactory()
+        session = session_factory.get_session()
+        tag = session.query(Tags).filter(Tags.id == tag_id).first()
+        if not tag:
+            abort(404, 'no such tag')
+        datas = []
+        for article in tag.articles:
+            datas.append(article.get_map_data())
+    except Exception as e:
+        abort(500, 'something has wrong')
+    finally:
+        session.close()
+
+    return jsonify({'posts': datas, 'id': tag.id, 'name': tag.name})
+
+
+@blog.route('/archives', methods=['GET'])
+def get_archives():
+    try:
+        session_factory = getSessionFactory()
+        session = session_factory.get_session()
+        sql = '''
+        select Article.article_id, Article.title, Article.views,
+        DATE_FORMAT(Article.time, '%Y') as post_year, 
+        DATE_FORMAT(Article.time, '%Y-%m-%d') as time
+        from Article 
+        order by post_year desc, article_id
+        '''
+        posts = session.execute(sql)
+        datas = []
+        temp = {}
+        for post in posts:
+            year = post[3]
+            post_data = {
+                'id': post[0],
+                'title': post[1],
+                'views': post[2],
+                'time': post[4]
+            }
+            if year in temp:
+                temp[year].append(post_data)
+            else:
+                temp[year] = [post_data]
+        
+        for year in sorted(temp, reverse=True):
+            datas.append(dict(year=year,posts=temp[year]))
+
+    except Exception as e:
+        raise e
+        abort(500, 'something is wrong')
+    finally:
+        session.close()
+
+    return jsonify({'archives': datas})

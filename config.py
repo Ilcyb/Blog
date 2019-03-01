@@ -11,7 +11,7 @@ class Config:
     MYSQL_PASSWORD = environ.get('MYSQL_PASSWORD')
     BLOG_DATABASE = 'blog'
     MYSQL_CHARSET = 'utf8'
-    ARTICLE_PER_PAGE = 6
+    ARTICLE_PER_PAGE = 10
     HOTEST_ARTICLE_NUMS = 5
     SECRET_KEY = urandom(24)
     COOKIE_EXPIRE = 3 * 60 * 60

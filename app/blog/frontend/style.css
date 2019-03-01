@@ -4,6 +4,10 @@ body {
     padding: 0;
 }
 
+[v-cloak] {
+    display: none;
+}
+
 div.paper {
     background-color: white;
     margin-top: 80px;
@@ -76,7 +80,7 @@ ul.post-tags li{
 div.post-time p{
     font-size: 16px;
     color: darkgray;
-    margin: 16px 0 0 0;
+    margin: 16px 0 16px 0;
     padding: 0;
     text-align: center;
 }
@@ -107,6 +111,9 @@ div.more-post a{
 div.footer {
     padding: 0;
     margin-bottom: 20px;
+    /* margin-left: 10%; */
+    /* position: absolute; */
+    /* bottom: 0; */
 }
 
 div.footer hr {
@@ -151,4 +158,28 @@ div.tags li {
     list-style-type: none;
     float: left;
     margin: 8px;
+}
+
+div.archive-list {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-size: 18px;
+}
+
+div.archive-list ul {
+    margin: 20px 0 20px 0;
+}
+
+div.archive-list li {
+    margin: 10px 0 10px 0;
+}
+
+span.archive-item-time {
+    margin-right: 20px;
+}
+
+span.archive-item-views {
+    margin-left: 4px;
+    font-size: 10px;
+    color: gray;
 }

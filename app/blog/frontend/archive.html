@@ -44,29 +44,17 @@
 
     <div class="container blog-main">
         <div class="col-md-9 blog-main-left">
-            <div id="post-intro" v-cloak>
-                <div class="post card container-fluid" v-for="post in posts">
-                    <div class="row">
-                        <div class="col-md-12 post-title">
-                            <a :href="'post.html?id=' + post.id">{{ post.title }}</a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 post-time">
-                            <p>{{ post.time }}</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 post-intro">
-                            <div v-html="post.content"></div>
-                        </div>
-                    </div>
+            <div class="archive-list container-fluid card" id="archives" cloak>
+                <div class="archive-year" v-for="archives in all_archives">
+                    <p>{{ archives.year }}</p>
+                    <ul>
+                        <li v-for="post in archives.posts">
+                            <span class="archive-item-time">{{ post.time }}</span>
+                            <a :href="'/post.html?id=' + post.id">{{ post.title }}</a>
+                            <span class="archive-item-views">{{ post.views }}</span>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-
-            
-            <div class="container-fluid card more-post">
-                <a href="/archive.html">更多文章...</a>
             </div>
         </div>
 
@@ -104,6 +92,28 @@
     var converter = new showdown.Converter({
         parseImgDimensions: true
     });
+
+    var archives = new Vue({
+        el: "#archives",
+        data: {
+            all_archives: []
+        },
+        created: function() {
+            this.getArchives();
+        },
+        methods: {
+            getArchives: function() {
+                axios.get(base_url + "/archives")
+                .then(res => {
+                    this.all_archives = res['data']['archives'];
+                })
+                .catch(err => {
+                    // TODO
+                })
+            }
+        }
+    })
+
     var category_list = new Vue({
         el: "#category",
         data: {
@@ -123,40 +133,6 @@
                 })
             }
         }
-    });
-
-    var post_introductions = new Vue({
-        el: "#post-intro",
-        data: {
-            posts: []
-        },
-        created: function () {
-            this.getPosts();
-        },
-        methods: {
-            convertMarkdown2Html: function (markdown) {
-                html = converter.makeHtml(markdown);
-                return html;
-            },
-            getPosts: function (page) {
-                axios.get(base_url + "/posts", {
-                        params: {
-                            page: page
-                        }
-                    })
-                    .then(res => {
-                        for (let i = 0; i < res['data']['datas'].length; i++) {
-                            res['data']['datas'][i].content = this.convertMarkdown2Html(res['data'][
-                                'datas'
-                            ][i].content);
-                        }
-                        this.posts = res['data']['datas'];
-                    })
-                    .catch(err => {
-                        // TODO alert
-                    })
-            }
-        },
     });
 
     var abot_me = new Vue({

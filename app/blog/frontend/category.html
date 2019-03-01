@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ilcyb's blog - 首页</title>
+    <title id="title">ilcyb's blog - {{ title }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
     <link rel="stylesheet" href="./style.css">
+    <script src="./utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9/dist/showdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.18/dist/axios.min.js"></script>
@@ -64,10 +65,9 @@
                 </div>
             </div>
 
-            
             <div class="container-fluid card more-post">
-                <a href="/archive.html">更多文章...</a>
-            </div>
+                    <a href="/archive.html">更多文章...</a>
+                </div>
         </div>
 
         <div class="col-md-3 container blog-main-right">
@@ -104,6 +104,14 @@
     var converter = new showdown.Converter({
         parseImgDimensions: true
     });
+
+    var title = new Vue({
+        el: "#title",
+        data: {
+            title: ''
+        }
+    })
+
     var category_list = new Vue({
         el: "#category",
         data: {
@@ -131,29 +139,31 @@
             posts: []
         },
         created: function () {
-            this.getPosts();
+            let url_params = getQueryStrings();
+            let category_id = url_params['id'];
+            if (!category_id) {
+                goNotFoundPage();
+            }
+            this.getPosts(category_id);
         },
         methods: {
             convertMarkdown2Html: function (markdown) {
                 html = converter.makeHtml(markdown);
                 return html;
             },
-            getPosts: function (page) {
-                axios.get(base_url + "/posts", {
-                        params: {
-                            page: page
-                        }
-                    })
+            getPosts: function (category_id) {
+                axios.get(base_url + "/category/" + category_id + "/posts")
                     .then(res => {
-                        for (let i = 0; i < res['data']['datas'].length; i++) {
-                            res['data']['datas'][i].content = this.convertMarkdown2Html(res['data'][
-                                'datas'
+                        for (let i = 0; i < res['data']['posts'].length; i++) {
+                            res['data']['posts'][i].content = this.convertMarkdown2Html(res['data'][
+                                'posts'
                             ][i].content);
                         }
-                        this.posts = res['data']['datas'];
+                        this.posts = res['data']['posts'];
+                        title.title = res['data']['name'];
                     })
                     .catch(err => {
-                        // TODO alert
+                        goNotFoundPage();
                     })
             }
         },
