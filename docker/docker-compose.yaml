@@ -19,7 +19,7 @@ services:
   blog-app:
     container_name: "python3.5-uwsgi-blog-app"
     hostname: "blog-app"
-    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.6.4"
+    image: "alpine-uwsgi:3.6.2"
     volumes:
       - ${BLOG_PATH}/Blog:/home/Blog
       - ${BLOG_PATH}/sockets:/home/socket
@@ -36,7 +36,7 @@ services:
     networks: 
       - backend_db
       - frontend
-    command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
+    command: "uwsgi /home/Blog/docker/alpine-uwsgi/uwsgi-app.ini"
 
   nginx:
     container_name: "nginx"

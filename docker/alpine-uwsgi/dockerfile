@@ -1,0 +1,18 @@
+FROM alpine:3.9
+
+COPY requirements.txt /tmp/requirements.txt
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirror.tuna.tsinghua.edu.cn/g' /etc/apk/repositories &&\
+    apk add --no-cache python3 && \
+    apk add --no-cache --virtual=build-dependencies \
+    g++ build-base libffi-dev python3-dev
+
+RUN pip3 install --no-cache-dir -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com uwsgi==2.0.18
+
+RUN pip3 install --no-cache-dir -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com -r /tmp/requirements.txt && \
+apk del g++ && \
+apk del --purge \
+build-dependencies && \
+rm -rf \
+/root/.cache \
+/tmp/*
