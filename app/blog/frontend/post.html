@@ -167,12 +167,16 @@
             this.getPost(post_id);
         },
         methods: {
+            addViews: function (post_id) {
+                axios.post(base_url + "/post/" + post_id + "/view");
+            },
             getPost: function (post_id) {
                 axios.get(base_url + "/post/" + post_id)
                     .then(res => {
                         res['data']['content'] = converter.makeHtml(res['data']['content']);
                         title.title = res['data']['title'];
                         this.post = res['data'];
+                        this.addViews(post_id);
                     })
                     .catch(err => {
                         if (err.response.status == 404) {

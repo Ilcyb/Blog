@@ -17,10 +17,14 @@ class Config:
     COOKIE_EXPIRE = 3 * 60 * 60
     ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
     MAX_CONTENT_LENGTH = 1024 * 1024 * 10
+    PERMANENT_SESSION_LIFETIME = 24 * 60 * 60
     QINIU_ACCESS_KEY = environ.get('QINIU_ACCESS_KEY')
     QINIU_SECRET_KEY = environ.get('QINIU_SECRET_KEY')
     QINIU_BUCKET_NAME = environ.get('QINIU_BUCKET_NAME')
     QINIU_BUCKET_URL = environ.get('QINIU_BUCKET_URL')
+    REDIS_HOST = environ.get('REDIS_HOST', 'redis5.0')
+    REDIS_PORT = environ.get('REDIS_PORT', 6379)
+    REDIS_DB = environ.get('REDIS_DB', 0)
 
 class DevConfig(Config):
     MYSQL_USERNAME = environ.get('MYSQL_USERNAME', 'root')

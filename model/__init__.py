@@ -1,4 +1,4 @@
-from .common import SessionFactory, PyMySqlSessionFactory, getSessionFactory
+from .common import SessionFactory, PyMySqlSessionFactory, getSessionFactory, getRedisConnection
 from .admin import Admin
 from .article import Articles
 from .category import Categories

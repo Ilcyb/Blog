@@ -2,6 +2,7 @@ from datetime import datetime
 from qiniu import Auth, put_data
 import hashlib
 import random
+import string
 
 def get_page(page, size):
     limit = size
@@ -47,3 +48,6 @@ def get_file_type(file_ext):
         return 0
     else:
         return 1
+
+def get_random_string(size=10):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=size))

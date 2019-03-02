@@ -1,7 +1,7 @@
 from . import blog
-from model import getSessionFactory, Articles, Categories, Comments, About, Tags
-from flask import render_template, redirect, url_for, abort, current_app, request, abort, jsonify
-from utils import get_page
+from model import getSessionFactory, getRedisConnection, Articles, Categories, Comments, About, Tags
+from flask import render_template, redirect, url_for, abort, current_app, request, abort, jsonify, session as flask_session, g
+from utils import get_page, get_random_string
 from sqlalchemy.orm.session import Session
 from sqlalchemy import func
 import datetime
@@ -269,3 +269,41 @@ def get_archives():
         session.close()
 
     return jsonify({'archives': datas})
+
+
+@blog.route('/post/<post_id>/view', methods=['POST'])
+def add_post_view(post_id):
+    identify = flask_session.get('identify', None)
+    add_flag = False
+
+    redis_conn = getRedisConnection()
+
+    if identify:
+        if redis_conn.get(f"POST_VISIT_HISTORY:{identify}:{post_id}") is not None:
+            pass
+        else:
+            add_flag = True
+    else:
+        identify = get_random_string()
+        add_flag = True
+
+    if add_flag:
+        try:
+            session_factory = getSessionFactory()
+            session = session_factory.get_session()
+            article = session.query(Articles).filter(Articles.id == post_id).first()
+            if not article:
+                return jsonify({'ret': False})
+            article.views += 1
+            session.add(article)
+            session.commit()
+            redis_conn.setex(f"POST_VISIT_HISTORY:{identify}:{post_id}", current_app.config['PERMANENT_SESSION_LIFETIME'], 1)
+            flask_session.permanent = True
+            flask_session['identify'] = identify
+        except Exception as e:
+            raise e
+            abort(500, 'something is wrong')
+        finally:
+            session.close()
+    
+    return jsonify({'ret': True})

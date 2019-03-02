@@ -4,6 +4,7 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy import create_engine
 from utils import SingletonMetaclass
 from flask import current_app
+import redis
 
 Base = declarative_base()
 
@@ -42,3 +43,19 @@ def getSessionFactory() -> SessionFactory:
     )
 
     return sessionFactory
+
+
+class RedisConnection(metaclass=SingletonMetaclass):
+
+    def __init__(self, host, port, db=0):
+        self._conn_poll = redis.ConnectionPool(host=host, port=port, db=db)
+
+    def get_conn(self) -> redis.Connection:
+        return redis.Redis(connection_pool=self._conn_poll)
+
+
+def getRedisConnection() -> redis.Connection:
+    redis_conn_instance = RedisConnection(current_app.config['REDIS_HOST'],
+                                          current_app.config['REDIS_PORT'],
+                                          current_app.config['REDIS_DB'] or 0)
+    return redis_conn_instance.get_conn()
