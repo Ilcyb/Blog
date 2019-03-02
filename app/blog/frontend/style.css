@@ -66,21 +66,28 @@ a.post-title:hover {
     text-decoration: none;
 }
 
-ul.post-tags {
-    text-align: left;
-    margin-top: 16;
+div.post-views {
+    text-align: center;
+    font-size: 16px;
+    margin: 0 0 16px 0;
+    color: gray;
 }
 
-ul.post-tags li{
-    list-style-type: none;
-    display: inline;
-    margin-left: 10px;
+div.post-tags {
+    text-align: center;
+    font-size: 16px;
+    margin: 0 0 16px 0;
+    color: gray;
+}
+
+div.post-tags span {
+    margin: 0 4px 0 4px;
 }
 
 div.post-time p{
     font-size: 16px;
     color: darkgray;
-    margin: 16px 0 16px 0;
+    margin: 16px 0 0 0;
     padding: 0;
     text-align: center;
 }
