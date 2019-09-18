@@ -1,0 +1,243 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title id="title">ilcyb's blog - {{title}}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9/dist/showdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.18/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div class="container card">
+        <div class="row">
+            <ul class="nav nav-pills col-md-6">
+                <li><a href="/">ilcyb</a></li>
+                <li>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                        aria-expanded="false">
+                        分类 <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu category" id="category">
+
+                        <li v-for="(item, index) in items" :key="index">
+                            <a :href="'/category.html?id=' + item.id">
+                                {{ item.name }}
+                            </a>
+                    </ul>
+                </li>
+                <li><a href="/archive.html">归档</a></li>
+                <li><a href="/about.html">关于</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container blog-main">
+        <div class="col-md-9 blog-main-left">
+            <div id="post" v-cloak>
+                <div class="post card container-fluid">
+                    <div class="row">
+                        <p class="col-md-12 post-title">{{ post.title }}</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 post-time">
+                            <p>{{ post.time }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div v-html="post.content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 container blog-main-right">
+            <div class="about-me-simple card container-fluid" id="about-me" v-cloak>
+                <div v-html="describetion"></div>
+            </div>
+
+            <div class="tags card container-fluid" id="tags" v-cloak>
+                <ul>
+                    <li v-for="tag in tags">
+                        <a :href="'/tag.html?id=' + tag.id">{{ tag.name }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+    <div class="container footer" id="footer" v-cloak>
+        <hr>
+        <div class="footer-info">
+            <a :href="email">{{ name }}</a>
+            <p> 2018-{{ current_year }}</p>
+            <span> | </span>
+            <a :href="power_url">Power by {{ power }}</a>
+            <span> | </span>
+            <a :href="beian_url">{{ beian }}</a>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    var base_url = "http://ilcyb.local/blog/api";
+    var converter = new showdown.Converter({
+        parseImgDimensions: true
+    });
+
+    var title = new Vue({
+        el: "#title",
+        data: {
+            title: ""
+        }
+    })
+
+    var category_list = new Vue({
+        el: "#category",
+        data: {
+            items: []
+        },
+        created: function () {
+            this.getCategories();
+        },
+        methods: {
+            getCategories: function () {
+                axios.get(base_url + "/categories")
+                    .then(res => {
+                        this.items = res['data']['datas'];
+                    })
+                    .catch(err => {
+                        // TODO
+                    })
+            }
+        }
+    });
+
+    var abot_me = new Vue({
+        el: "#about-me",
+        data: {
+            describetion: ''
+        },
+        created: function () {
+            this.getDescribetion();
+        },
+        methods: {
+            getDescribetion: function () {
+                axios.get(base_url + "/about/simple")
+                    .then(res => {
+                        if (res['data']['parse_type'] == 'markdown') {
+                            this.describetion = converter.makeHtml(res['data']['describetion']);
+                        } else if (res['data']['parse_type'] == 'html') {
+                            this.describetion = res['data']['describetion'];
+                        }
+                    })
+                    .catch(err => {
+                        // TODO alert
+                    })
+            }
+        }
+    })
+
+    var post = new Vue({
+        el: "#post",
+        data: {
+            post: {}
+        },
+        created: function () {
+            let url_params = getQueryStrings();
+            let post_id = url_params['id'];
+            if (!post_id) {
+                goNotFoundPage();
+            }
+            this.getPost(post_id);
+        },
+        methods: {
+            addViews: function (post_id) {
+                axios.post(base_url + "/post/" + post_id + "/view");
+            },
+            getPost: function (post_id) {
+                axios.get(base_url + "/post/" + post_id)
+                    .then(res => {
+                        res['data']['content'] = converter.makeHtml(res['data']['content']);
+                        title.title = res['data']['title'];
+                        this.post = res['data'];
+                        this.addViews(post_id);
+                    })
+                    .catch(err => {
+                        if (err.response.status == 404) {
+                            goNotFoundPage();
+                        }
+                    })
+            }
+        }
+    })
+
+    var tags = new Vue({
+        el: "#tags",
+        data: {
+            tags: []
+        },
+        created: function () {
+            this.getTags();
+        },
+        methods: {
+            getTags: function () {
+                axios.get(base_url + "/tags")
+                    .then(res => {
+                        this.tags = res['data']['datas'];
+                    })
+                    .catch(err => {
+                        // TODO
+                    })
+            }
+        }
+    })
+
+    var footer = new Vue({
+        el: "#footer",
+        data: {
+            name: '',
+            email: '',
+            power: '',
+            power_url: '',
+            beian: '',
+            beian_url: '',
+            current_year: ''
+        },
+        created: function () {
+            this.getFooterInfo();
+        },
+        methods: {
+            getFooterInfo: function () {
+                axios.get(base_url + "/footer")
+                    .then(res => {
+                        this.name = res['data']['name'];
+                        this.email = res['data']['email'];
+                        this.power = res['data']['power'];
+                        this.power_url = res['data']['power_url'];
+                        this.beian = res['data']['beian'];
+                        this.beian_url = res['data']['beian_url'];
+                        this.current_year = res['data']['current_year'];
+                    })
+                    .catch(err => {
+                        // TODO
+                    })
+            }
+        }
+    })
+</script>

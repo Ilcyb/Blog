@@ -1,0 +1,185 @@
+body {
+    background-color: #F4F4F4;
+    font-family: Georgia, serif;
+    padding: 0;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+div.paper {
+    background-color: white;
+    margin-top: 80px;
+    box-shadow: 3px 3px 3px #888888;
+}
+
+div.card {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #E7E7E7;
+}
+
+div.blog-main {
+    padding: 0;
+    margin-top: -25px;
+}
+
+div.blog-main-left {
+    padding: 0 0 0 0;
+}
+
+div.blog-main-right {
+    padding: 0 0 0 10px;
+}
+
+ul.nav {
+    font-size: 20px;
+}
+
+ul.nav li{
+    list-style-type: none;
+    display: inline;
+    margin-right: 10px;
+}
+
+ul.nav li a{
+    color: #888888;
+}
+
+ul.category a{
+    font-size: 20px;
+}
+
+div.post-title {
+    color: #4078c0;
+    font-size: 30px;
+    margin: 16px 0 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+a.post-title:hover {
+    text-decoration: none;
+}
+
+ul.post-tags {
+    text-align: left;
+    margin-top: 16;
+}
+
+ul.post-tags li{
+    list-style-type: none;
+    display: inline;
+    margin-left: 10px;
+}
+
+div.post-time p{
+    font-size: 16px;
+    color: darkgray;
+    margin: 16px 0 16px 0;
+    padding: 0;
+    text-align: center;
+}
+
+div.post-intro {
+    /* padding: 0 16px 0 16px; */
+    font-size: 18px;
+}
+
+div.post-intro img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+div.about-me-simple {
+    font-size: 16px;
+}
+
+div.more-post {
+    text-align: center;
+    padding: 20px 0 20px 0;
+}
+
+div.more-post a{
+    font-size: 18px;
+}
+
+div.footer {
+    padding: 0;
+    margin-bottom: 20px;
+    /* margin-left: 10%; */
+    /* position: absolute; */
+    /* bottom: 0; */
+}
+
+div.footer hr {
+    line-height: 1px;
+    border-bottom: 1px solid #708090;
+}
+
+div.footer-info {
+    text-align: center;
+}
+
+div.footer-info a {
+    display: inline;
+}
+
+div.footer-info p {
+    display: inline;
+}
+
+div.post {
+    font-size: 18px;
+}
+
+div.post img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+p.post-title {
+    color: #4078c0;
+    font-size: 30px;
+    margin: 16px 0 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+div.tags ul {
+    padding: 0;
+}
+
+div.tags li {
+    list-style-type: none;
+    float: left;
+    margin: 8px;
+}
+
+div.archive-list {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-size: 18px;
+}
+
+div.archive-list ul {
+    margin: 20px 0 20px 0;
+}
+
+div.archive-list li {
+    margin: 10px 0 10px 0;
+}
+
+span.archive-item-time {
+    margin-right: 20px;
+}
+
+span.archive-item-views {
+    margin-left: 4px;
+    font-size: 10px;
+    color: gray;
+}

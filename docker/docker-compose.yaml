@@ -15,50 +15,44 @@ services:
       - "3306:3306"
     networks: 
       - backend_db
+    
+  redis5.0:
+    container_name: "redis5.0"
+    hostname: "redis"
+    image: "redis:5.0-alpine"
+    ports:
+      - "6379:6379"
+    networks:
+      - backend_db
 
   blog-app:
-    container_name: "python3.5-uwsgi-blog-app"
+    container_name: "python3-uwsgi-blog-app"
     hostname: "blog-app"
-    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.5"
+    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:alpine-3.6.2"
     volumes:
       - ${BLOG_PATH}/Blog:/home/Blog
       - ${BLOG_PATH}/sockets:/home/socket
     environment:
       - MYSQL_USERNAME=${MYSQL_DOCKER_USERNAME}
       - MYSQL_PASSWORD=${MYSQL_DOCKER_PASSWORD}
+      - MYSQL_HOST=127.0.0.1
+      - MYSQL_PORT=3306
       - TZ=Asia/Shanghai
       - MYSQL_HOST=mysql5.7
+      - ENV=production
     ports:
       - "5000:5000"
     networks: 
       - backend_db
       - frontend
-    command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-app.ini"
-
-  blog-admin:
-    container_name: "python3.5-uwsgi-blog-admin"
-    hostname: "blog-admin"
-    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:3.5"
-    volumes:
-      - ${BLOG_PATH}/Blog:/home/Blog
-      - ${BLOG_PATH}/sockets:/home/socket
-    environment:
-      - MYSQL_USERNAME=${MYSQL_DOCKER_USERNAME}
-      - MYSQL_PASSWORD=${MYSQL_DOCKER_PASSWORD}
-      - TZ=Asia/Shanghai
-      - MYSQL_HOST=mysql5.7
-    ports:
-      - "5001:5001"
-    networks: 
-      - backend_db
-      - frontend
-    command: "/var/uwsgi/uwsgi-2.0.17.1/uwsgi /home/Blog/docker/python3.5-uwsgi/uwsgi-admin.ini"
+    command: "uwsgi /home/Blog/docker/alpine-uwsgi/uwsgi-app.ini"
 
   nginx:
     container_name: "nginx"
     hostname: "nginx"
     image: "nginx:1.15.2-alpine"
     volumes:
+      - ${BLOG_PATH}/Blog:/var/www/Blog
       - ${BLOG_PATH}/Blog/docker/nginx/conf.d:/etc/nginx/conf.d
       - ${BLOG_PATH}/sockets:/home/socket
     environment:
