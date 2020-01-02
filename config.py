@@ -3,8 +3,8 @@ from os import environ, urandom
 class Config:
     MY_NAME = '@ilcyb'
     MY_EMAIL = 'mailto:hybmail1996@gmail.com'
-    POWER = 'Tencent Cloud'
-    POWER_URL = 'https://cloud.tencent.com/'
+    POWER = 'Cloudcone'
+    POWER_URL = 'https://cloudcone.com/'
     BEIAN = '粤ICP备19015827号'
     BEIAN_URL = 'http://www.miitbeian.gov.cn'
     MYSQL_USERNAME = environ.get('MYSQL_USERNAME')
