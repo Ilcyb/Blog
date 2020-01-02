@@ -32,6 +32,8 @@ services:
     volumes:
       - ${BLOG_PATH}/Blog:/home/Blog
       - ${BLOG_PATH}/sockets:/home/socket
+    env_file: 
+      - ../.env
     environment:
       - MYSQL_USERNAME=${MYSQL_DOCKER_USERNAME}
       - MYSQL_PASSWORD=${MYSQL_DOCKER_PASSWORD}
@@ -40,6 +42,10 @@ services:
       - TZ=Asia/Shanghai
       - MYSQL_HOST=mysql5.7
       - ENV=production
+      # - QINIU_ACCESS_KEY=${QINIU_ACCESS_KEY}
+      # - QINIU_SECRET_KEY=${QINIU_SECRET_KEY}
+      # - QINIU_BUCKET_NAME=${QINIU_BUCKET_NAME}
+      # - QINIU_BUCKET_URL=${QINIU_BUCKET_URL}
     ports:
       - "5000:5000"
     networks: 
