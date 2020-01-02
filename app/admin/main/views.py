@@ -236,7 +236,7 @@ def delete_post(post_id):
 #     return render_template('index.html', posts=result, username=flask_session['username'], categories=categories)
 
 @admin.route('/resource', methods=['GET'])
-# @login_required
+@login_required
 def resource_manage():
     query_data = request.args
 
@@ -254,7 +254,7 @@ def resource_manage():
     return render_template('resourceUpload.html', resources = resources_data)
 
 @admin.route('/resource', methods=['POST'])
-# @login_required
+@login_required
 def upload_resource():
     if 'file' not in request.files:
         abort(400, 'no file has been uploaded.')
