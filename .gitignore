@@ -6,3 +6,5 @@ Pipfile.lock
 mysql-data
 __pycache__
 demo.py
+.env
+.qiniu_pythonsdk_hostscache.json

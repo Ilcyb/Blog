@@ -212,25 +212,76 @@ def delete_post(post_id):
     session.close()
     return redirect(url_for('admin.index'))
 
-@admin.route('/search', methods=['POST'])
-@login_required
-def search_posts():
-    title = request.form['title']
-    category = int(request.form['category'])
-    h = DBHelper()
-    sql = "select A.article_id,A.title,A.time,A.views,C.name from" \
-          " Article as A left join Category as C on A.category=C.category_id where "
-    if title:
-        sql += "A.title like '%{}%' or A.category = {}"
-        sql = sql.format(title, category)
-        result = [dict(id=article[0], title=article[1], time=article[2].strftime('%Y-%m-%d'), views=article[3],
-                       tag=article[4]) for article in list(h.execute(sql))]
+# @admin.route('/search', methods=['POST'])
+# @login_required
+# def search_posts():
+#     title = request.form['title']
+#     category = int(request.form['category'])
+#     h = DBHelper()
+#     sql = "select A.article_id,A.title,A.time,A.views,C.name from" \
+#           " Article as A left join Category as C on A.category=C.category_id where "
+#     if title:
+#         sql += "A.title like '%{}%' or A.category = {}"
+#         sql = sql.format(title, category)
+#         result = [dict(id=article[0], title=article[1], time=article[2].strftime('%Y-%m-%d'), views=article[3],
+#                        tag=article[4]) for article in list(h.execute(sql))]
+#     else:
+#         sql += "A.category = %d"
+#         sql = sql % category
+#         result = [dict(id=article[0], title=article[1], time=article[2].strftime('%Y-%m-%d'), views=article[3],
+#                        tag=article[4]) for article in list(h.execute(sql))]
+#     categories_sql = 'select category_id, name from Category'
+#     categories_result = h.execute(categories_sql)
+#     categories = [dict(id=category[0],name=category[1]) for category in categories_result]
+#     return render_template('index.html', posts=result, username=flask_session['username'], categories=categories)
+
+@admin.route('/resource', methods=['GET'])
+# @login_required
+def resource_manage():
+    query_data = request.args
+
+    page = int(query_data.get('page', 1))
+    size = int(query_data.get('size', current_app.config['ARTICLE_PER_PAGE']))
+
+    if page <= 0 or size <= 0:
+        abort(400)
+
+    offset, limit = get_page(page, size)
+    session = getSessionFactory().get_session()
+    resources = session.query(Resources) \
+                .order_by(Resources.id.desc()).offset(offset).limit(limit).all()
+    resources_data = [resource.get_map_data() for resource in resources]
+    return render_template('resourceUpload.html', resources = resources_data)
+
+@admin.route('/resource', methods=['POST'])
+# @login_required
+def upload_resource():
+    if 'file' not in request.files:
+        abort(400, 'no file has been uploaded.')
+    file = request.files['file']
+    if file.filename == '':
+        abort(400, 'no file has been uploaded')
+
+    file_extension = get_file_extension(file.filename)
+    if file and allowed_file(file_extension, current_app.config['ALLOWED_EXTENSIONS']):
+        ret = upload_file_to_qiniu(current_app.config['QINIU_ACCESS_KEY'],
+                             current_app.config['QINIU_SECRET_KEY'], 
+                             current_app.config['QINIU_BUCKET_NAME'], 
+                             file.filename, file.read())
+        if not ret['ret']:
+            abort(500, ret['msg'])
     else:
-        sql += "A.category = %d"
-        sql = sql % category
-        result = [dict(id=article[0], title=article[1], time=article[2].strftime('%Y-%m-%d'), views=article[3],
-                       tag=article[4]) for article in list(h.execute(sql))]
-    categories_sql = 'select category_id, name from Category'
-    categories_result = h.execute(categories_sql)
-    categories = [dict(id=category[0],name=category[1]) for category in categories_result]
-    return render_template('index.html', posts=result, username=session['username'], categories=categories)
+        abort(400, 'not allowed file type.')
+    
+    url = f"http://{current_app.config['QINIU_BUCKET_URL']}/{ret['key']}"
+    file_type = get_file_type(file_extension)
+    
+    sessionFactory = getSessionFactory()
+    session = sessionFactory.get_session()
+
+    new_resource = Resources(0, file.filename, file_type, url)
+    session.add(new_resource)
+    session.commit()
+    session.close()
+
+    return redirect(url_for('admin.resource_manage'))

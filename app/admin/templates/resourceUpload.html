@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script> -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
+
+    <title>后台管理 - 首页</title>
+</head>
+
+<body>
+
+
+    <body>
+        <nav class="navbar navbar-inverse" role="navigation">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a class="icon-bar" href="#">博客后台管理</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a>欢迎您, {{ username }}</a>
+                        </li>
+                        <li>
+                            <a href="/logout">安全退出</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-2">
+                    <a href="/" class="list-group-item">文章管理</a>
+                    <a href="/post" class="list-group-item">新建文章</a>
+                    <a href="/resource" class="list-group-item active">资源上传</a>
+                </div>
+
+                <div class="col-sm-10">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>资源上传</h4>
+                        </div>
+                        <div class="panel-body">
+                            <form method="POST" action="/resource" class="form-horizontal" enctype=multipart/form-data>
+                                <div class="input-group mb-3">
+                                <div class="custom-file">
+                                    <input type=file name=file>
+                                    <!-- <input type="file" name="file" class="custom-file-input" id="inputGroupFile02">
+                                    <label class="custom-file-label" for="inputGroupFile02"
+                                        aria-describedby="inputGroupFileAddon02">选择文件</label> -->
+                                </div>
+                                <div class="input-group-append">
+                                    <input type="submit" class="input-group-text"
+                                        id="inputGroupFileAddon02">上传</button>
+                                </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                        <div class="col-sm-12">
+                            {% for resource in resources %}
+                            <img id="resource_{{ resource['id'] }}" src="{{ resource['url'] }}" 
+                            data-clipboard-text="{{ resource['url'] }}" 
+                            class="card-img-top col-sm-2 resource-img" 
+                            style="margin: 20px;" alt="{{ resource['file_name'] }}"
+                            data-toggle="popover" data-trigger="focus" 
+                            data-content="复制图片链接至剪切板">
+                            {% endfor %}
+                        </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </body>
+
+</body>
+
+<script type="text/javascript">
+   var resources = document.getElementsByClassName("resource-img");
+   var clipboard = new ClipboardJS(resources);
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+    clipboard.on('error', function(e) {
+        alert("复制失败");
+        console.log(e);
+    });
+//    for(var i=0;i<resources.length;i++)
+//    {
+//        var url = resources[i].src
+//        resources[i].onclick = function() {
+
+//        }
+//    }
+</script>
+
+</html>

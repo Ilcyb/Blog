@@ -27,10 +27,13 @@ def upload_file_to_qiniu(acess_key, secret_key, bucket_name, file_name, file_dat
 
         file_ext, file_name = file_name.split('.')[-1:-3:-1]
         file_name_md5 = hashlib.md5((file_name + str(random.randint(0, 100))).encode()).hexdigest()
+        file_name = file_name_md5 + '.' + file_ext
 
-        token = q.upload_token(bucket_name, file_name_md5, 300)
+        token = q.upload_token(bucket_name, file_name, 300)
 
-        ret, info = put_data(token, file_name_md5, file_data)
+        ret, info = put_data(token, file_name, file_data)
+        if (info.status_code != 200):
+            raise Exception('上传失败')
     except Exception as e:
         return {'ret': False, 'msg': str(e)}
     else:
@@ -44,10 +47,13 @@ def allowed_file(file_ext, allow_extensions):
     return file_ext in allow_extensions
 
 def get_file_type(file_ext):
-    if file_ext in ['jpg', 'jpeg', 'png', 'gif']:
-        return 0
-    else:
-        return 1
+    filetypes = {
+        'jpg': 0,
+        'jpeg': 1,
+        'png': 2,
+        'gif': 3
+    }
+    return filetypes[file_ext]
 
 def get_random_string(size=10):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=size))
