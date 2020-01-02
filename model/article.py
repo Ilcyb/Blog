@@ -31,7 +31,7 @@ class Articles(Base):
             'time': self.time.strftime('%Y-%m-%d %H:%M'),
             'content': self.content,
             'views': self.views,
-            'category': self.category.name
+            'category': self.category.get_map_data()
         }
 
         comments = []

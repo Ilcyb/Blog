@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+    <title>后台管理 - 首页</title>
+</head>
+
+<body>
+    <body>
+            <nav class="navbar navbar-inverse" role="navigation">
+                <div class="container-fluid">
+                    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a class="icon-bar" href="#">博客后台管理</a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a>欢迎您, {{ username }}</a>
+                            </li>
+                            <li><a href="/logout">安全退出</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+    
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <a href="/" class="list-group-item active">文章管理</a>
+                        <a href="/post" class="list-group-item">新建文章</a>
+                    </div>
+                    <div class="col-sm-10">
+                        <ol class="breadcrumb">
+                            <li class="active">文章列表
+                            </li>
+                        </ol>
+    
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                搜索
+                            </div>
+                            <div class="panel-body">
+                                <form role="form" class="form-inline" method="post" action="/search">
+                                    <div class="form-group">
+                                        <label for="name">标题</label>
+                                        <input type="text" class="form-control" id="title" name="title" placeholder="请输入标题">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">分类</label>
+                                        <select class="form-control" id="category" name="category">
+                                            {% for category in categories %}
+                                            <option value="{{ category['id'] }}">{{ category['name'] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-default">开始搜索</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--
+                            列表展示
+                        -->
+                        <div class="table-responsive">
+                            <table class="table table-striped ">
+                                <thead>
+                                    <tr>
+                                        <th>文章</th>
+                                        <th>创建时间</th>
+                                        <th>分类</th>
+                                        <th>点击量</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 18px;">
+                                    {% for post in posts %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{url_for('admin.get_edit_post_page', post_id=post.id)}}"><p>{{ post.title }}</p></a>
+                                        </td>
+                                        <td>{{ post.time }}</td>
+                                        <td>{{ post.tag }}</td>
+                                        <td>{{ post.views }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="/edit/{{ post.id }}" class="btn btn-primary">修改</a><a href="/delete/{{ post.id }}" class="btn btn-danger">删除</a>
+                                            </div>
+    
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+{#                        <ul class="pagination" style="float: right;">#}
+{#                            <li><a href="#">&laquo;</a>#}
+{#                            </li>#}
+{#                            <li class="active"><a href="#">1</a>#}
+{#                            </li>#}
+{#                            <li class="disabled"><a href="#">2</a>#}
+{#                            </li>#}
+{#                            <li><a href="#">3</a>#}
+{#                            </li>#}
+{#                            <li><a href="#">4</a>#}
+{#                            </li>#}
+{#                            <li><a href="#">5</a>#}
+{#                            </li>#}
+{#                            <li><a href="#">&raquo;</a>#}
+{#                            </li>#}
+{#                        </ul>#}
+                    </div>
+                </div>
+            </div>
+        </body>
+    
+</body>
+
+</html>
