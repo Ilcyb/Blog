@@ -6,7 +6,7 @@ class Config:
     POWER = 'Cloudcone'
     POWER_URL = 'https://cloudcone.com/'
     BEIAN = '粤ICP备19015827号'
-    BEIAN_URL = 'http://www.miitbeian.gov.cn'
+    BEIAN_URL = 'http://www.beian.miit.gov.cn/'
     MYSQL_USERNAME = environ.get('MYSQL_USERNAME')
     MYSQL_PASSWORD = environ.get('MYSQL_PASSWORD')
     BLOG_DATABASE = 'blog'
