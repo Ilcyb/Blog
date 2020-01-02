@@ -17,8 +17,14 @@ cd ../../
 CODE_PATH=`pwd`
 export BLOG_PATH="${CODE_PATH}"
 
+# # 检查环境变量
+cd ${CODE_PATH}/Blog
+if [ ! -f "${CODE_PATH}/Blog/.env" ]; then
+echo "未发现.env文件，无法注入环境变量，程序运行可能会出现错误"
+fi
+
 # 启动docker
-cd Blog/docker
+cd docker
 docker-compose up -d
 
 # 执行sql脚本
