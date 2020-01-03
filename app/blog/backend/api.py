@@ -91,7 +91,7 @@ def get_articles_by_category(category_id):
             abort(404, 'no such category')
 
         articles = session.query(Articles).filter(Articles.category_id == category_id).order_by(
-            Articles.id).offset(offset).limit(limit).all()
+            Articles.id.desc()).offset(offset).limit(limit).all()
 
         datas = []
         for article in articles:
@@ -241,7 +241,7 @@ def get_archives():
         DATE_FORMAT(Article.time, '%Y') as post_year, 
         DATE_FORMAT(Article.time, '%Y-%m-%d') as time
         from Article 
-        order by post_year desc, article_id
+        order by post_year desc, article_id desc
         '''
         posts = session.execute(sql)
         datas = []
