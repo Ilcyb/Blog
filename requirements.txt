@@ -14,4 +14,4 @@ redis==3.2.0
 requests==2.21.0
 sqlalchemy==1.2.18
 urllib3==1.24.1; python_version != '3.2.*'
-werkzeug==0.14.1
+werkzeug==0.15.3
