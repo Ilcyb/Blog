@@ -21,7 +21,7 @@ MYSQL_DUMP_PATH=${TOP_PATH}/${BACKUP_FOLDER}/blog_dump.sql
 
 # 备份
 mysqldump -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} -h127.0.0.1 --databases blog > ${MYSQL_DUMP_PATH}
-# git add .
-# git commit -m "mysql data backup"
-# git push -u origin master
-# echo "mysql backup down!"
+git add .
+git commit -m "mysql data backup"
+git push -u origin master
+echo "mysql backup down!"
