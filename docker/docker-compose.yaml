@@ -20,8 +20,6 @@ services:
     container_name: "redis5.0"
     hostname: "redis"
     image: "redis:5.0-alpine"
-    ports:
-      - "6379:6379"
     networks:
       - backend_db
 
@@ -42,12 +40,6 @@ services:
       - TZ=Asia/Shanghai
       - MYSQL_HOST=mysql5.7
       - ENV=production
-      # - QINIU_ACCESS_KEY=${QINIU_ACCESS_KEY}
-      # - QINIU_SECRET_KEY=${QINIU_SECRET_KEY}
-      # - QINIU_BUCKET_NAME=${QINIU_BUCKET_NAME}
-      # - QINIU_BUCKET_URL=${QINIU_BUCKET_URL}
-    ports:
-      - "5000:5000"
     networks: 
       - backend_db
       - frontend
