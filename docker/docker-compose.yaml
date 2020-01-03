@@ -26,7 +26,7 @@ services:
   blog-app:
     container_name: "python3-uwsgi-blog-app"
     hostname: "blog-app"
-    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:alpine-3.6.2"
+    image: "registry.cn-hangzhou.aliyuncs.com/ilcyb/python-uwsgi:alpine-3.6.2-Shanghai"
     volumes:
       - ${BLOG_PATH}/Blog:/home/Blog
       - ${BLOG_PATH}/sockets:/home/socket
@@ -37,7 +37,6 @@ services:
       - MYSQL_PASSWORD=${MYSQL_DOCKER_PASSWORD}
       - MYSQL_HOST=127.0.0.1
       - MYSQL_PORT=3306
-      - TZ=Asia/Shanghai
       - MYSQL_HOST=mysql5.7
       - ENV=production
     networks: 
