@@ -109,7 +109,8 @@
 <script>
     var base_url = "/blog/api";
     var converter = new showdown.Converter({
-        parseImgDimensions: true
+        parseImgDimensions: true,
+        tables: true
     });
 
     var title = new Vue({
